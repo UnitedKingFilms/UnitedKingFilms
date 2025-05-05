@@ -25,6 +25,42 @@
     "video": ""
   },
   {
+    "_id": "film6",
+    "title": "הנווד האחרון",
+    "director": "טל אביב",
+    "actors": "אבי לוי, מירי אלוני, יעקב כהן",
+    "synopsis": "מסע עצמי במדבר יהודה שהופך לחיפוש אחר משמעות.",
+    "image": "https://static.wixstatic.com/media/nsplsh_376a656e49444a7661756668_lossy128webp.webp",
+    "genre": ["הרפתקאות", "דרמה"],
+    "aud": ["בוגרים"],
+    "length": "110",
+    "video": ""
+  },
+  {
+    "_id": "film4",
+    "title": "הנווד האחרון",
+    "director": "טל אביב",
+    "actors": "אבי לוי, מירי אלוני, יעקב כהן",
+    "synopsis": "מסע עצמי במדבר יהודה שהופך לחיפוש אחר משמעות.",
+    "image": "https://static.wixstatic.com/media/nsplsh_376a656e49444a7661756668_lossy128webp.webp",
+    "genre": ["הרפתקאות", "דרמה"],
+    "aud": ["בוגרים"],
+    "length": "110",
+    "video": ""
+  },
+  {
+    "_id": "film5",
+    "title": "הנווד האחרון",
+    "director": "טל אביב",
+    "actors": "אבי לוי, מירי אלוני, יעקב כהן",
+    "synopsis": "מסע עצמי במדבר יהודה שהופך לחיפוש אחר משמעות.",
+    "image": "https://static.wixstatic.com/media/nsplsh_376a656e49444a7661756668_lossy128webp.webp",
+    "genre": ["הרפתקאות", "דרמה"],
+    "aud": ["בוגרים"],
+    "length": "110",
+    "video": ""
+  },
+  {
     "_id": "film3",
     "title": "מעבר לגבול",
     "director": "נועה פרידמן",
