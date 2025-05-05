@@ -1,1 +1,89 @@
-<p>hello </p>
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Film Gallery</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mobile-styles.css" media="(max-width: 767px)">
+    <link rel="icon" href="img/logo/favicon.ico" type="image/x-icon">
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="startScreen" class="section">
+        <div id="logo" class="logo-container">
+            <!-- Logo image -->
+            <picture>
+                <source srcset="img/logo/logo-mobile.png" media="(max-width: 767px)">
+                <img src="img/logo/logo.png" alt="Film Gallery Logo">
+            </picture>
+        </div>
+        <button id="startButton" class="primary-button">Start Exploring</button>
+    </div>
+
+    <!-- Gallery View -->
+    <div id="boxy" class="section gallery-container" style="display: none;">
+        <div id="gallery" class="gallery-grid">
+            <!-- Gallery items will be populated by JavaScript -->
+        </div>
+        <div id="loadMoreContainer" class="load-more-container">
+            <button id="loadMoreButton" class="secondary-button">Load More</button>
+        </div>
+    </div>
+
+    <!-- Detail View -->
+    <div id="posterContainer" class="section detail-container" style="display: none;">
+        <button id="backButton" class="back-button">Back to Gallery</button>
+        
+        <div class="detail-content">
+            <div class="poster-section">
+                <img id="moviePoster" class="movie-poster" src="" alt="Movie Poster">
+            </div>
+            
+            <div class="info-section">
+                <h2 id="movieTitle" class="movie-title"></h2>
+                <p id="movieDirector" class="movie-director"></p>
+                
+                <div class="movie-meta">
+                    <div id="fests" class="meta-item">
+                        <span class="meta-label">Festivals:</span>
+                        <span id="mfest" class="meta-value"></span>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <span class="meta-label">Genre:</span>
+                        <span id="mgenre" class="meta-value"></span>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <span class="meta-label">Audience:</span>
+                        <span id="maud" class="meta-value"></span>
+                    </div>
+                    
+                    <div class="meta-item">
+                        <span class="meta-label">Length:</span>
+                        <span id="mlength" class="meta-value"></span>
+                    </div>
+                </div>
+                
+                <div class="movie-cast">
+                    <h3>Cast:</h3>
+                    <p id="movieActors"></p>
+                </div>
+                
+                <div class="movie-synopsis">
+                    <h3>Synopsis:</h3>
+                    <p id="movieSynopsis"></p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="video-container">
+            <video id="video" controls style="display: none;"></video>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
