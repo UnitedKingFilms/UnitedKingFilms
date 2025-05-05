@@ -18,27 +18,37 @@
                 <img src="img/logo/logo.png" alt="Film Gallery Logo">
             </picture>
         </div>
-        <button id="startButton" class="primary-button"></button>
+        <button id="startButton" class="primary-button" aria-label="התחל לחקור">
+            <!-- Button image will be loaded as CSS background -->
+        </button>
     </div>
 
     <!-- Gallery View -->
-<div id="boxy" class="section gallery-container" style="display: none;">
-    <!-- Navigation buttons -->
-    <button id="prevButton" class="gallery-nav-button prev">←</button>
-    <button id="nextButton" class="gallery-nav-button next">→</button>
-    
-    <div id="gallery" class="gallery-grid">
-        <!-- Gallery items will be populated by JavaScript -->
+    <div id="boxy" class="section gallery-container" style="display: none;">
+        <!-- Navigation buttons -->
+        <button id="prevButton" class="gallery-nav-button prev" aria-label="הקודם">
+            <!-- Button image will be loaded as CSS background -->
+        </button>
+        <button id="nextButton" class="gallery-nav-button next" aria-label="הבא">
+            <!-- Button image will be loaded as CSS background -->
+        </button>
+        
+        <div id="gallery" class="gallery-grid">
+            <!-- Gallery items will be populated by JavaScript -->
+        </div>
+        
+        <div id="loadMoreContainer" class="load-more-container">
+            <button id="loadMoreButton" class="secondary-button" aria-label="טען עוד">
+                <!-- Button image will be loaded as CSS background -->
+            </button>
+        </div>
     </div>
-    
-    <div id="loadMoreContainer" class="load-more-container">
-        <button id="loadMoreButton" class="secondary-button">Load More</button>
-    </div>
-</div>
 
     <!-- Detail View -->
     <div id="posterContainer" class="section detail-container" style="display: none;">
-        <button id="backButton" class="back-button"></button>
+        <button id="backButton" class="back-button" aria-label="חזרה לגלריה">
+            <!-- Button image will be loaded as CSS background -->
+        </button>
         
         <div class="detail-content">
             <div class="poster-section">
@@ -51,33 +61,33 @@
                 
                 <div class="movie-meta">
                     <div id="fests" class="meta-item">
-                        <span class="meta-label">Festivals:</span>
+                        <span class="meta-label">פסטיבלים:</span>
                         <span id="mfest" class="meta-value"></span>
                     </div>
                     
                     <div class="meta-item">
-                        <span class="meta-label">Genre:</span>
+                        <span class="meta-label">ז'אנר:</span>
                         <span id="mgenre" class="meta-value"></span>
                     </div>
                     
                     <div class="meta-item">
-                        <span class="meta-label">Audience:</span>
+                        <span class="meta-label">קהל יעד:</span>
                         <span id="maud" class="meta-value"></span>
                     </div>
                     
                     <div class="meta-item">
-                        <span class="meta-label">Length:</span>
+                        <span class="meta-label">אורך:</span>
                         <span id="mlength" class="meta-value"></span>
                     </div>
                 </div>
                 
                 <div class="movie-cast">
-                    <h3>Cast:</h3>
+                    <h3>שחקנים:</h3>
                     <p id="movieActors"></p>
                 </div>
                 
                 <div class="movie-synopsis">
-                    <h3>Synopsis:</h3>
+                    <h3>תקציר:</h3>
                     <p id="movieSynopsis"></p>
                 </div>
             </div>
