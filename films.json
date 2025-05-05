@@ -1,0 +1,40 @@
+[
+  {
+    "_id": "film1",
+    "title": "לשחק עם הרוח",
+    "director": "דניאל כהן",
+    "actors": "רות מזרחי, דוד לוי, שרה אהרוני",
+    "synopsis": "סיפור מרגש על מציאת משמעות חדשה בחיים.",
+    "image": "https://static.wixstatic.com/media/nsplsh_36726174314a61505934_lossy128webp.webp",
+    "genre": ["דרמה", "רומנטיקה"],
+    "aud": ["כל המשפחה"],
+    "length": "95",
+    "fest": "פסטיבל חיפה 2023",
+    "video": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  },
+  {
+    "_id": "film2",
+    "title": "הנווד האחרון",
+    "director": "טל אביב",
+    "actors": "אבי לוי, מירי אלוני, יעקב כהן",
+    "synopsis": "מסע עצמי במדבר יהודה שהופך לחיפוש אחר משמעות.",
+    "image": "https://static.wixstatic.com/media/nsplsh_376a656e49444a7661756668_lossy128webp.webp",
+    "genre": ["הרפתקאות", "דרמה"],
+    "aud": ["בוגרים"],
+    "length": "110",
+    "video": ""
+  },
+  {
+    "_id": "film3",
+    "title": "מעבר לגבול",
+    "director": "נועה פרידמן",
+    "actors": "אורן חזן, ליאת שניר, דני שפירא",
+    "synopsis": "מבט על קהילה קטנה בגבול הצפון המתמודדת עם אתגרים.",
+    "image": "https://static.wixstatic.com/media/nsplsh_56b36168664148627063514a7351386145336367_lossy128webp.webp",
+    "genre": ["תיעודי"],
+    "aud": ["בוגרים"],
+    "length": "85",
+    "fest": "דוקאביב 2023",
+    "video": "https://www.youtube.com/watch?v=aBkTkxKDduc"
+  }
+]
