@@ -159,7 +159,7 @@ button {
 
 .gallery-nav-button.next {
     right: 10px;
-    background-image: url('./img/buttons/next-button.png');
+    background-image: url('../img/buttons/next-button.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
