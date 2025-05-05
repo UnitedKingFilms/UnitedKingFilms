@@ -119,66 +119,33 @@
         </div>
     </div>
 
-    <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("DOM loaded");
-            
-            // Debug info display
-            const showDebugInfo = (message) => {
-                console.log(message);
-                const debugInfo = document.querySelector('.debug-info');
-                debugInfo.textContent = message;
-            };
-            
-            // Get elements
-            const startScreen = document.getElementById('startScreen');
-            const startButton = document.getElementById('startButton');
-            const boxy = document.getElementById('boxy');
-            const posterContainer = document.getElementById('posterContainer');
-            const backButton = document.getElementById('backButton');
-            const backToStartButton = document.getElementById('backToStartButton');
-            const galleryItems = document.querySelectorAll('.gallery-item');
-            const movieTitle = document.getElementById('movieTitle');
-            
-            // Start button event
-            startButton.addEventListener('click', function() {
-                showDebugInfo("Start button clicked - Showing gallery view");
-                startScreen.style.display = 'none';
-                boxy.style.display = 'block';
-                posterContainer.style.display = 'none';
-            });
-            
-            // Back to start button event
-            backToStartButton.addEventListener('click', function() {
-                showDebugInfo("Back to start button clicked - Showing start screen");
-                boxy.style.display = 'none';
-                posterContainer.style.display = 'none';
-                startScreen.style.display = 'block';
-            });
-            
-            // Back button event
-            backButton.addEventListener('click', function() {
-                showDebugInfo("Back button clicked - Showing gallery view");
-                posterContainer.style.display = 'none';
-                boxy.style.display = 'block';
-            });
-            
-            // Gallery item click events
-            galleryItems.forEach(item => {
-                item.addEventListener('click', function() {
-                    const id = this.dataset.id;
-                    const title = this.querySelector('h3').textContent;
-                    
-                    showDebugInfo(`Gallery item clicked: ${id} - Showing detail view`);
-                    boxy.style.display = 'none';
-                    posterContainer.style.display = 'block';
-                    movieTitle.textContent = title;
-                });
-            });
-            
-            showDebugInfo("Debug page loaded successfully - All event listeners set up");
-        });
-    </script>
+   <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log("Direct navigation script loaded");
+    
+    // Direct button handlers
+    const startButton = document.getElementById('startButton');
+    const startScreen = document.getElementById('startScreen');
+    const boxy = document.getElementById('boxy');
+    const posterContainer = document.getElementById('posterContainer');
+    const backButton = document.getElementById('backButton');
+    
+    if (startButton) {
+      startButton.addEventListener('click', function() {
+        console.log("Start button clicked directly");
+        startScreen.style.display = 'none';
+        boxy.style.display = 'block';
+      });
+    }
+    
+    if (backButton) {
+      backButton.addEventListener('click', function() {
+        console.log("Back button clicked directly");
+        posterContainer.style.display = 'none';
+        boxy.style.display = 'block';
+      });
+    }
+  });
+</script>
 </body>
 </html>
