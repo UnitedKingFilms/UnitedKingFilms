@@ -167,68 +167,105 @@ const App = (function() {
     };
     
     /**
-     * Set up horizontal gallery navigation
-     */
-    const setupGalleryNavigation = () => {
-        // Get navigation buttons
-        if (!elements.prevButton || !elements.nextButton || !elements.gallery) {
-            log("Navigation elements not found");
+ * Set up horizontal gallery navigation
+ */
+const setupGalleryNavigation = () => {
+    // Get navigation buttons
+    if (!elements.prevButton || !elements.nextButton || !elements.gallery) {
+        log("Navigation elements not found");
+        return;
+    }
+    
+    // Track current visible range
+    let visibleStartIndex = 0;
+    let visibleEndIndex = 4; // 0-4 = 5 items
+    let maxIndex = 0; // Will be set when films are loaded
+    
+    // Previous button click
+    elements.prevButton.addEventListener('click', () => {
+        log("Previous button clicked");
+        
+        if (visibleStartIndex <= 0) {
+            log("Already at the beginning");
             return;
         }
         
-        // Set scroll amount - width of 1 item + gap
-        const scrollAmount = 220; // 200px item width + 20px gap
+        // Move the visible range one position left
+        visibleStartIndex--;
+        visibleEndIndex--;
         
-        // Previous button click
-        elements.prevButton.addEventListener('click', () => {
-            log("Previous button clicked");
-            elements.gallery.scrollBy({
-                left: -scrollAmount,
-                behavior: 'smooth'
-            });
-        });
+        // Update the gallery
+        updateVisibleItems();
+    });
+    
+    // Next button click
+    elements.nextButton.addEventListener('click', () => {
+        log("Next button clicked");
         
-        // Next button click
-        elements.nextButton.addEventListener('click', () => {
-            log("Next button clicked");
-            elements.gallery.scrollBy({
-                left: scrollAmount,
-                behavior: 'smooth'
-            });
-        });
-        
-        // Show/hide buttons based on scroll position
-        elements.gallery.addEventListener('scroll', () => {
-            // Check if we can scroll left
-            if (elements.gallery.scrollLeft <= 0) {
-                elements.prevButton.style.opacity = '0.3';
-            } else {
-                elements.prevButton.style.opacity = '1';
+        if (visibleEndIndex >= maxIndex) {
+            log("Already at the end");
+            // Load more items if available
+            if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(currentPage)) {
+                log("Loading more items");
+                currentPage++;
+                loadFilmsToGallery(currentPage);
+                return;
             }
-            
-            // Check if we can scroll right
-            if (elements.gallery.scrollLeft + elements.gallery.clientWidth >= elements.gallery.scrollWidth - 10) {
-                elements.nextButton.style.opacity = '0.3';
-                
-                // If we're at the end and there are more items to load
-                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(currentPage)) {
-                    // Show load more button
-                    if (elements.loadMoreButton) {
-                        elements.loadMoreButton.style.display = 'block';
-                    }
-                }
+            return;
+        }
+        
+        // Move the visible range one position right
+        visibleStartIndex++;
+        visibleEndIndex++;
+        
+        // Update the gallery
+        updateVisibleItems();
+    });
+    
+    // Function to update the gallery with the current visible range
+    const updateVisibleItems = () => {
+        log(`Updating visible items: ${visibleStartIndex} to ${visibleEndIndex}`);
+        
+        // Get all gallery items
+        const items = elements.gallery.querySelectorAll('.gallery-item');
+        
+        // If we don't have enough items, return
+        if (items.length <= 0) {
+            log("No items in gallery");
+            return;
+        }
+        
+        maxIndex = items.length - 1;
+        
+        // Show/hide items based on visible range
+        items.forEach((item, index) => {
+            if (index >= visibleStartIndex && index <= visibleEndIndex) {
+                item.style.display = 'block';
             } else {
+                item.style.display = 'none';
+            }
+        });
+        
+        // Update navigation buttons
+        elements.prevButton.style.opacity = visibleStartIndex <= 0 ? '0.3' : '1';
+        elements.nextButton.style.opacity = visibleEndIndex >= maxIndex ? '0.3' : '1';
+        
+        // If we're at the end and there's more to load, show the next button
+        if (visibleEndIndex >= maxIndex) {
+            if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(currentPage)) {
                 elements.nextButton.style.opacity = '1';
-                
-                // Hide load more button when not at the end
-                if (elements.loadMoreButton) {
-                    elements.loadMoreButton.style.display = 'none';
-                }
             }
-        });
-        
-        log("Gallery navigation set up");
+        }
     };
+    
+    // Expose the update function for the loadFilmsToGallery function to use
+    App.updateVisibleItems = updateVisibleItems;
+    
+    log("Gallery navigation set up");
+    
+    // Return the update function for use elsewhere
+    return updateVisibleItems;
+};
     
     /**
      * Set up gallery with click handlers for items
@@ -250,114 +287,96 @@ const App = (function() {
         gallerySetupComplete = true;
         log("Gallery setup complete");
     };
-    
-    /**
-     * Load films to the gallery view
-     * @param {number} page - Page number to load
-     */
-    const loadFilmsToGallery = async (page = 1) => {
-        try {
-            log(`Loading films for page ${page}`);
+  /**
+ * Load films to the gallery view
+ * @param {number} page - Page number to load
+ */
+const loadFilmsToGallery = async (page = 1) => {
+    try {
+        log(`Loading films for page ${page}`);
+        
+        if (!elements.gallery) {
+            log("Gallery element not found");
+            return;
+        }
+        
+        // Safety check for FilmData
+        if (typeof FilmData === 'undefined' || !FilmData.getFilmsForPage) {
+            log("ERROR: FilmData module not available");
+            return;
+        }
+        
+        // Get films for the current page
+        const films = FilmData.getFilmsForPage(page);
+        
+        if (!films || films.length === 0) {
+            log("No films found for this page");
+            return;
+        }
+        
+        log(`Found ${films.length} films for page ${page}`);
+        
+        // Don't limit to 5, load all films but only show 5
+        const allFilms = films;
+        
+        // Clear gallery if this is the first page
+        if (page === 1) {
+            elements.gallery.innerHTML = '';
+        }
+        
+        // Create gallery items
+        allFilms.forEach((film, index) => {
+            if (!film || !film._id) return;
             
-            if (!elements.gallery) {
-                log("Gallery element not found");
-                return;
+            // Create gallery item
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            item.dataset.id = film._id;
+            
+            // Set initial display - show first 5 items, hide the rest
+            if (index > 4 && page === 1) {
+                item.style.display = 'none';
             }
             
-            // Safety check for FilmData
-            if (typeof FilmData === 'undefined' || !FilmData.getFilmsForPage) {
-                log("ERROR: FilmData module not available");
-                return;
-            }
+            // Set image
+            const img = document.createElement('img');
             
-            // Get films for the current page
-            const films = FilmData.getFilmsForPage(page);
+            // Use safe image setter (prevents undefined URLs)
+            const defaultImage = 
+                (typeof FilmData !== 'undefined' && FilmData.DEFAULT_IMAGE) 
+                ? FilmData.DEFAULT_IMAGE 
+                : FALLBACK_IMAGE;
+                
+            setSafeImageSrc(img, film.image || defaultImage, film.title || 'Film');
             
-            if (!films || films.length === 0) {
-                log("No films found for this page");
-                return;
-            }
+            // Set title
+            const title = document.createElement('div');
+            title.className = 'gallery-item-title';
+            title.textContent = film.title || 'Untitled Film';
             
-            log(`Found ${films.length} films for page ${page}`);
+            // Add to gallery
+            item.appendChild(img);
+            item.appendChild(title);
             
-            // Limit to 5 items per page for horizontal scrolling
-            const itemsPerPage = 5;
-            const startIndex = (page - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const filmsToShow = films.slice(0, endIndex);
-            
-            // Clear gallery if this is the first page
-            if (page === 1) {
-                elements.gallery.innerHTML = '';
-            }
-            
-            // Create gallery items
-            filmsToShow.forEach((film, index) => {
-                // Skip items already shown in previous pages
-                if (page > 1 && index < (page - 1) * itemsPerPage) {
-                    return;
-                }
-                
-                if (!film || !film._id) return;
-                
-                // Create gallery item
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.dataset.id = film._id;
-                
-                // Set image
-                const img = document.createElement('img');
-                
-                // Use safe image setter (prevents undefined URLs)
-                const defaultImage = 
-                    (typeof FilmData !== 'undefined' && FilmData.DEFAULT_IMAGE) 
-                    ? FilmData.DEFAULT_IMAGE 
-                    : FALLBACK_IMAGE;
-                    
-                setSafeImageSrc(img, film.image || defaultImage, film.title || 'Film');
-                
-                // Set title
-                const title = document.createElement('div');
-                title.className = 'gallery-item-title';
-                title.textContent = film.title || 'Untitled Film';
-                
-                // Add to gallery
-                item.appendChild(img);
-                item.appendChild(title);
-                
-                // Add click event
-                item.addEventListener('click', () => {
-                    handleGalleryItemClick(film._id);
-                });
-                
-                elements.gallery.appendChild(item);
+            // Add click event
+            item.addEventListener('click', () => {
+                handleGalleryItemClick(film._id);
             });
             
-            log(`Added films to gallery (showing ${startIndex + 1} to ${endIndex} of ${films.length})`);
-            
-            // Update navigation buttons visibility
-            if (elements.nextButton) {
-                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(page)) {
-                    // There are more pages to load
-                    elements.nextButton.style.opacity = '1';
-                } else if (endIndex < films.length) {
-                    // There are more items in the current results to show
-                    elements.nextButton.style.opacity = '1';
-                } else {
-                    // No more items to show
-                    elements.nextButton.style.opacity = '0.3';
-                }
-            }
-            
-            // Hide load more button initially
-            if (elements.loadMoreButton) {
-                elements.loadMoreButton.style.display = 'none';
-            }
-            
-        } catch (error) {
-            log("Error loading films to gallery:", error);
+            elements.gallery.appendChild(item);
+        });
+        
+        log(`Added ${allFilms.length} items to gallery (showing 5 at a time)`);
+        
+        // Call the update function to ensure visibility is correct
+        if (typeof App.updateVisibleItems === 'function') {
+            App.updateVisibleItems();
         }
-    };
+        
+    } catch (error) {
+        log("Error loading films to gallery:", error);
+    }
+};
     
     /**
      * Handle gallery item click
