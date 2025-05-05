@@ -7,7 +7,7 @@
 // Configuration
 const CONFIG = {
     ITEMS_PER_PAGE: 20,
-    DEFAULT_IMAGE: "img/default-poster.jpg",
+    DEFAULT_IMAGE: "./img/default-poster.jpg",
     DATA_FILE: "data/films.json"
 };
 
