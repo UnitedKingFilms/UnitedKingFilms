@@ -507,11 +507,11 @@ const loadFilmsToGallery = async (page = 1) => {
     };
     
     // Public API
-    return {
+   return {
+    init: async function() {
         /**
          * Initialize the application
          */
-        init: async function() {
             log("Initializing application");
             
             try {
@@ -555,6 +555,7 @@ const loadFilmsToGallery = async (page = 1) => {
                 log("Error initializing application:", error);
             }
         }
+       updateVisibleItems: null
     };
 })();
 
