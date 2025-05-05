@@ -3,12 +3,6 @@
  * Main application logic for the film gallery
  */
 
-// Configuration
-const CONFIG = {
-    ITEMS_PER_PAGE: 20,
-    DEFAULT_IMAGE: "img/default-poster.jpg"
-};
-
 // Application module
 const App = (function() {
     // Private variables
@@ -21,12 +15,6 @@ const App = (function() {
     let elements = {};
     
     // Helper Functions
-    const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-    
-    const isMobile = () => {
-        return window.innerWidth <= 767;
-    };
-    
     const log = (message, data) => {
         if (data) {
             console.log(`LOG: ${message}`, data);
@@ -62,71 +50,55 @@ const App = (function() {
             video: document.getElementById('video')
         };
         
-        log("DOM elements cached");
+        log("DOM elements cached", elements);
     };
     
     /**
      * Set up event handlers
      */
     const setupEventHandlers = () => {
-        // Start button
+        // Start button - DIRECT IMPLEMENTATION FOR DEBUGGING
         if (elements.startButton) {
-            elements.startButton.addEventListener('click', async () => {
+            log("Setting up start button handler");
+            
+            elements.startButton.addEventListener('click', () => {
                 log("Start button clicked");
                 
-                if (isProcessing) return;
-                isProcessing = true;
+                // Simple direct transition for reliability
+                elements.startScreen.style.display = 'none';
+                elements.boxy.style.display = 'block';
                 
-                try {
-                    // Transition from start screen to gallery
-                    await fadeOut(elements.startScreen);
-                    await fadeIn(elements.boxy);
-                    window.scrollTo(0, 0);
-                } catch (error) {
-                    log("Error transitioning to gallery view:", error);
-                    
-                    // Fallback
-                    elements.startScreen.style.display = 'none';
-                    elements.boxy.style.display = 'block';
-                } finally {
-                    setTimeout(() => { isProcessing = false; }, 600);
-                }
+                log("Transitioned to gallery view");
             });
             
             log("Start button handler set up");
+        } else {
+            log("ERROR: Start button element not found!");
         }
         
-        // Back button
+        // Back button - DIRECT IMPLEMENTATION FOR DEBUGGING
         if (elements.backButton) {
-            elements.backButton.addEventListener('click', async () => {
+            log("Setting up back button handler");
+            
+            elements.backButton.addEventListener('click', () => {
                 log("Back button clicked");
                 
-                if (isProcessing) return;
-                isProcessing = true;
-                
-                try {
-                    // Pause and hide video if playing
-                    if (elements.video) {
-                        elements.video.pause();
-                        elements.video.style.display = 'none';
-                    }
-                    
-                    // Transition back to gallery
-                    await fadeOut(elements.posterContainer);
-                    await fadeIn(elements.boxy);
-                    window.scrollTo(0, 0);
-                } catch (error) {
-                    log("Error returning to gallery view:", error);
-                    
-                    // Fallback
-                    elements.posterContainer.style.display = 'none';
-                    elements.boxy.style.display = 'block';
-                } finally {
-                    setTimeout(() => { isProcessing = false; }, 600);
+                // Pause video if playing
+                if (elements.video) {
+                    elements.video.pause();
+                    elements.video.style.display = 'none';
                 }
+                
+                // Simple direct transition for reliability
+                elements.posterContainer.style.display = 'none';
+                elements.boxy.style.display = 'block';
+                
+                log("Transitioned to gallery view");
             });
             
             log("Back button handler set up");
+        } else {
+            log("ERROR: Back button element not found!");
         }
         
         // Load more button
@@ -157,6 +129,11 @@ const App = (function() {
         log("Setting up gallery");
         
         // Create gallery if it doesn't exist
+        if (!elements.gallery) {
+            log("ERROR: Gallery element not found!");
+            return;
+        }
+        
         if (!elements.gallery.querySelector('.gallery-grid')) {
             elements.gallery.innerHTML = '<div class="gallery-grid"></div>';
         }
@@ -202,10 +179,10 @@ const App = (function() {
                 
                 // Set image
                 const img = document.createElement('img');
-                img.src = film.image || CONFIG.DEFAULT_IMAGE;
+                img.src = film.image || FilmData.DEFAULT_IMAGE;
                 img.alt = film.title || 'Film';
                 img.onerror = function() {
-                    this.src = CONFIG.DEFAULT_IMAGE;
+                    this.src = FilmData.DEFAULT_IMAGE;
                 };
                 
                 // Set title
@@ -219,6 +196,7 @@ const App = (function() {
                 
                 // Add click event
                 item.addEventListener('click', () => {
+                    log(`Gallery item clicked: ${film._id}`);
                     handleGalleryItemClick(film._id);
                 });
                 
@@ -243,7 +221,7 @@ const App = (function() {
      * Handle gallery item click
      * @param {string} id - Film ID
      */
-    const handleGalleryItemClick = async (id) => {
+    const handleGalleryItemClick = (id) => {
         log(`Gallery item clicked: ${id}`);
         
         // Simple debounce
@@ -261,16 +239,16 @@ const App = (function() {
             
             if (!film) {
                 log(`Film with ID ${id} not found`);
+                isProcessing = false;
                 return;
             }
             
-            // Display film details
-            await displayFilmDetails(film);
+            // Display film details with direct DOM manipulation
+            displayFilmDetails(film);
             
         } catch (error) {
             log("Error handling gallery item click:", error);
-        } finally {
-            setTimeout(() => { isProcessing = false; }, 600);
+            isProcessing = false;
         }
     };
     
@@ -278,9 +256,10 @@ const App = (function() {
      * Display film details in the detail view
      * @param {Object} film - Film data
      */
-    const displayFilmDetails = async (film) => {
+    const displayFilmDetails = (film) => {
         if (!film) {
             log("No film provided to displayFilmDetails");
+            isProcessing = false;
             return;
         }
         
@@ -289,10 +268,10 @@ const App = (function() {
         try {
             // Update image
             if (elements.moviePoster) {
-                elements.moviePoster.src = film.image || CONFIG.DEFAULT_IMAGE;
+                elements.moviePoster.src = film.image || FilmData.DEFAULT_IMAGE;
                 elements.moviePoster.alt = film.title || 'Film Poster';
                 elements.moviePoster.onerror = function() {
-                    this.src = CONFIG.DEFAULT_IMAGE;
+                    this.src = FilmData.DEFAULT_IMAGE;
                 };
             }
             
@@ -343,79 +322,18 @@ const App = (function() {
                 }
             }
             
-            // View transitions
-            await fadeOut(elements.boxy);
-            await fadeIn(elements.posterContainer);
+            // Direct view transition
+            elements.boxy.style.display = 'none';
+            elements.posterContainer.style.display = 'block';
             window.scrollTo(0, 0);
             
             log("Film details displayed successfully");
         } catch (error) {
             log("Error displaying film details:", error);
-            
-            // Fallback transition
-            elements.boxy.style.display = 'none';
-            elements.posterContainer.style.display = 'block';
+        } finally {
+            // Ensure isProcessing is reset
+            setTimeout(() => { isProcessing = false; }, 600);
         }
-    };
-    
-    /**
-     * Fade in animation helper
-     * @param {HTMLElement} element - Element to fade in
-     * @returns {Promise} Resolves when animation completes
-     */
-    const fadeIn = async (element) => {
-        return new Promise((resolve) => {
-            if (!element) {
-                resolve();
-                return;
-            }
-            
-            // Reset display and opacity
-            element.style.opacity = '0';
-            element.style.display = 'block';
-            
-            // Add transition
-            element.style.transition = 'opacity 0.5s ease';
-            
-            // Trigger reflow
-            void element.offsetWidth;
-            
-            // Fade in
-            element.style.opacity = '1';
-            
-            // Wait for animation to complete
-            setTimeout(() => {
-                element.style.transition = '';
-                resolve();
-            }, 500);
-        });
-    };
-    
-    /**
-     * Fade out animation helper
-     * @param {HTMLElement} element - Element to fade out
-     * @returns {Promise} Resolves when animation completes
-     */
-    const fadeOut = async (element) => {
-        return new Promise((resolve) => {
-            if (!element) {
-                resolve();
-                return;
-            }
-            
-            // Set transition
-            element.style.transition = 'opacity 0.5s ease';
-            
-            // Fade out
-            element.style.opacity = '0';
-            
-            // Wait for animation to complete
-            setTimeout(() => {
-                element.style.display = 'none';
-                element.style.transition = '';
-                resolve();
-            }, 500);
-        });
     };
     
     // Public API
@@ -431,7 +349,11 @@ const App = (function() {
                 cacheElements();
                 
                 // Initialize film data
-                await FilmData.init();
+                if (typeof FilmData !== 'undefined' && FilmData.init) {
+                    await FilmData.init();
+                } else {
+                    log("WARNING: FilmData module not found or init method missing");
+                }
                 
                 // Set up event handlers
                 setupEventHandlers();
@@ -439,13 +361,17 @@ const App = (function() {
                 // Set up gallery and load initial films
                 setupGallery();
                 
-                // Only show gallery on start button click
-                // Start screen is visible by default
+                // Load initial films if FilmData is available
+                if (typeof FilmData !== 'undefined' && FilmData.getFilmsForPage) {
+                    loadFilmsToGallery(1);
+                } else {
+                    log("WARNING: Cannot load films, FilmData module not properly initialized");
+                }
                 
                 log("Application initialized successfully");
                 
                 // Check if mobile and apply mobile optimizations
-                if (isMobile()) {
+                if (window.innerWidth <= 767) {
                     log("Mobile device detected, applying mobile optimizations");
                     document.body.classList.add('mobile');
                 }
@@ -459,11 +385,10 @@ const App = (function() {
 
 // Initialize the application when DOM is fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // First load the film data
-    FilmData.init().then(() => {
-        // Then initialize the app
-        App.init();
-        
-        console.log("Film Gallery initialized successfully");
-    });
+    console.log("DOM loaded, initializing application");
+    
+    // Initialize the app directly for more reliable startup
+    App.init();
+    
+    console.log("Film Gallery initialization triggered");
 });
