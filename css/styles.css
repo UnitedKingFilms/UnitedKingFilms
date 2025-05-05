@@ -8,7 +8,7 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
-    background-image: url('./img/backgrounds/main-bg.jpg'); /* Main background */
+    background-image: url('../img/backgrounds/main-bg.jpg'); /* Main background */
     background-size: cover;
     background-attachment: fixed;
     background-position: center;
@@ -32,7 +32,7 @@ button {
 /* Image-based buttons */
 .primary-button {
     background-color: transparent; /* Transparent background */
-    background-image: url('./img/buttons/start-button.png'); /* Default button image */
+    background-image: url('../img/buttons/start-button.png'); /* Default button image */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -45,13 +45,13 @@ button {
 }
 
 .primary-button:hover {
-    background-image: url('./img/buttons/start-button-hover.png'); /* Hover button image */
+    background-image: url('../img/buttons/start-button-hover.png'); /* Hover button image */
     transform: none; /* No scale animation */
 }
 
 .secondary-button {
     background-color: transparent;
-    background-image: url('./img/buttons/load-more-button.png');
+    background-image: url('../img/buttons/load-more-button.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -64,13 +64,13 @@ button {
 }
 
 .secondary-button:hover {
-    background-image: url('./img/buttons/load-more-button-hover.png');
+    background-image: url('../img/buttons/load-more-button-hover.png');
     transform: none;
 }
 
 .back-button {
     background-color: transparent;
-    background-image: url('./img/buttons/back-button.png');
+    background-image: url('../img/buttons/back-button.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
@@ -84,7 +84,7 @@ button {
 }
 
 .back-button:hover {
-    background-image: url('./img/buttons/back-button-hover.png');
+    background-image: url('../img/buttons/back-button-hover.png');
     transform: none;
 }
 
@@ -96,7 +96,7 @@ button {
     justify-content: center;
     height: 100vh;
     text-align: center;
-    background-image: url('./img/backgrounds/gallery-bg.jpg'); /* Start screen background */
+    background-image: url('../img/backgrounds/gallery-bg.jpg'); /* Start screen background */
     background-size: cover;
     background-position: center;
 }
@@ -147,14 +147,14 @@ button {
 
 .gallery-nav-button.prev {
     left: 10px;
-    background-image: url('./img/buttons/prev-button.png');
+    background-image: url('../img/buttons/prev-button.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .gallery-nav-button.prev:hover {
-    background-image: url('./img/buttons/prev-button-hover.png');
+    background-image: url('../img/buttons/prev-button-hover.png');
 }
 
 .gallery-nav-button.next {
@@ -166,7 +166,7 @@ button {
 }
 
 .gallery-nav-button.next:hover {
-    background-image: url('./img/buttons/next-button-hover.png');
+    background-image: url('../img/buttons/next-button-hover.png');
 }
 
 /* Gallery items */
