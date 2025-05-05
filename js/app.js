@@ -11,6 +11,9 @@ const App = (function() {
     let gallerySetupComplete = false;
     let lastClickTime = 0; // For debounce
     
+    // Fallback image path (used when FilmData is not available or image is undefined)
+    const FALLBACK_IMAGE = "./img/default-poster.jpg";
+    
     // DOM Elements Cache
     let elements = {};
     
@@ -21,6 +24,39 @@ const App = (function() {
         } else {
             console.log(`LOG: ${message}`);
         }
+    };
+    
+    /**
+     * Safe image setter - prevents undefined URLs
+     * @param {HTMLImageElement} imgElement - Image element to set src for
+     * @param {string} imgSrc - Source URL for the image
+     * @param {string} altText - Alt text for the image
+     */
+    const setSafeImageSrc = (imgElement, imgSrc, altText = "Image") => {
+        if (!imgElement) return;
+        
+        // Set alt text if provided
+        if (altText) {
+            imgElement.alt = altText;
+        }
+        
+        // Check if image source is valid
+        if (imgSrc && typeof imgSrc === 'string' && imgSrc.trim() !== '') {
+            imgElement.src = imgSrc;
+        } else {
+            log("Invalid image source, using fallback", imgSrc);
+            imgElement.src = FALLBACK_IMAGE;
+        }
+        
+        // Add error handler to prevent 404s
+        imgElement.onerror = function() {
+            log("Image failed to load:", this.src);
+            // Only set fallback if not already using it (prevent loops)
+            if (this.src !== FALLBACK_IMAGE) {
+                this.src = FALLBACK_IMAGE;
+            }
+            this.onerror = null; // Remove handler to prevent loops
+        };
     };
     
     /**
@@ -50,14 +86,14 @@ const App = (function() {
             video: document.getElementById('video')
         };
         
-        log("DOM elements cached", elements);
+        log("DOM elements cached");
     };
     
     /**
      * Set up event handlers
      */
     const setupEventHandlers = () => {
-        // Start button - DIRECT IMPLEMENTATION FOR DEBUGGING
+        // Start button - DIRECT IMPLEMENTATION FOR RELIABILITY
         if (elements.startButton) {
             log("Setting up start button handler");
             
@@ -113,8 +149,12 @@ const App = (function() {
                 loadFilmsToGallery(currentPage);
                 
                 // Hide button if no more pages
-                if (!FilmData.hasMorePages(currentPage)) {
-                    elements.loadMoreButton.style.display = 'none';
+                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages) {
+                    if (!FilmData.hasMorePages(currentPage)) {
+                        elements.loadMoreButton.style.display = 'none';
+                    }
+                } else {
+                    log("WARNING: FilmData.hasMorePages not available");
                 }
             });
             
@@ -155,10 +195,16 @@ const App = (function() {
                 return;
             }
             
+            // Safety check for FilmData
+            if (typeof FilmData === 'undefined' || !FilmData.getFilmsForPage) {
+                log("ERROR: FilmData module not available");
+                return;
+            }
+            
             // Get films for the current page
             const films = FilmData.getFilmsForPage(page);
             
-            if (films.length === 0) {
+            if (!films || films.length === 0) {
                 log("No films found for this page");
                 return;
             }
@@ -179,11 +225,14 @@ const App = (function() {
                 
                 // Set image
                 const img = document.createElement('img');
-                img.src = film.image || FilmData.DEFAULT_IMAGE;
-                img.alt = film.title || 'Film';
-                img.onerror = function() {
-                    this.src = FilmData.DEFAULT_IMAGE;
-                };
+                
+                // Use safe image setter (prevents undefined URLs)
+                const defaultImage = 
+                    (typeof FilmData !== 'undefined' && FilmData.DEFAULT_IMAGE) 
+                    ? FilmData.DEFAULT_IMAGE 
+                    : FALLBACK_IMAGE;
+                    
+                setSafeImageSrc(img, film.image || defaultImage, film.title || 'Film');
                 
                 // Set title
                 const title = document.createElement('div');
@@ -196,7 +245,6 @@ const App = (function() {
                 
                 // Add click event
                 item.addEventListener('click', () => {
-                    log(`Gallery item clicked: ${film._id}`);
                     handleGalleryItemClick(film._id);
                 });
                 
@@ -206,10 +254,12 @@ const App = (function() {
             log(`Added ${films.length} items to gallery`);
             
             // Show/hide load more button
-            if (FilmData.hasMorePages(page)) {
-                elements.loadMoreButton.style.display = 'block';
-            } else {
-                elements.loadMoreButton.style.display = 'none';
+            if (typeof FilmData !== 'undefined' && FilmData.hasMorePages) {
+                if (FilmData.hasMorePages(page)) {
+                    elements.loadMoreButton.style.display = 'block';
+                } else {
+                    elements.loadMoreButton.style.display = 'none';
+                }
             }
             
         } catch (error) {
@@ -234,6 +284,13 @@ const App = (function() {
         isProcessing = true;
         
         try {
+            // Safety check for FilmData
+            if (typeof FilmData === 'undefined' || !FilmData.getFilmById) {
+                log("ERROR: FilmData module not available");
+                isProcessing = false;
+                return;
+            }
+            
             // Get film data
             const film = FilmData.getFilmById(id);
             
@@ -266,16 +323,17 @@ const App = (function() {
         log("Displaying film details", film);
         
         try {
-            // Update image
+            // Update image - use safe image setter
             if (elements.moviePoster) {
-                elements.moviePoster.src = film.image || FilmData.DEFAULT_IMAGE;
-                elements.moviePoster.alt = film.title || 'Film Poster';
-                elements.moviePoster.onerror = function() {
-                    this.src = FilmData.DEFAULT_IMAGE;
-                };
+                const defaultImage = 
+                    (typeof FilmData !== 'undefined' && FilmData.DEFAULT_IMAGE) 
+                    ? FilmData.DEFAULT_IMAGE 
+                    : FALLBACK_IMAGE;
+                    
+                setSafeImageSrc(elements.moviePoster, film.image || defaultImage, film.title || 'Film Poster');
             }
             
-            // Update text elements
+            // Update text elements - with null checks
             if (elements.movieTitle) elements.movieTitle.textContent = film.title || '';
             if (elements.movieDirector) elements.movieDirector.textContent = film.director || '';
             if (elements.movieActors) elements.movieActors.textContent = film.actors || '';
@@ -311,9 +369,9 @@ const App = (function() {
                 }
             }
             
-            // Handle video
+            // Handle video - with safety checks
             if (elements.video) {
-                if (film.video && film.video.trim()) {
+                if (film.video && typeof film.video === 'string' && film.video.trim() !== '') {
                     elements.video.src = film.video;
                     elements.video.style.display = 'block';
                 } else {
@@ -348,9 +406,14 @@ const App = (function() {
                 // Cache DOM elements
                 cacheElements();
                 
-                // Initialize film data
+                // Initialize film data if available
                 if (typeof FilmData !== 'undefined' && FilmData.init) {
-                    await FilmData.init();
+                    try {
+                        await FilmData.init();
+                        log("Film data initialized");
+                    } catch (error) {
+                        log("Error initializing film data:", error);
+                    }
                 } else {
                     log("WARNING: FilmData module not found or init method missing");
                 }
@@ -358,7 +421,7 @@ const App = (function() {
                 // Set up event handlers
                 setupEventHandlers();
                 
-                // Set up gallery and load initial films
+                // Set up gallery
                 setupGallery();
                 
                 // Load initial films if FilmData is available
