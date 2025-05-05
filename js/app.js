@@ -10,6 +10,7 @@ const App = (function() {
     let isProcessing = false;
     let gallerySetupComplete = false;
     let lastClickTime = 0; // For debounce
+    let updateVisibleItems = null;
     
     // Fallback image path (used when FilmData is not available or image is undefined)
     const FALLBACK_IMAGE = "./img/default-poster.jpg";
