@@ -70,6 +70,8 @@ const App = (function() {
             startButton: document.getElementById('startButton'),
             boxy: document.getElementById('boxy'),
             gallery: document.getElementById('gallery'),
+            prevButton: document.getElementById('prevButton'),
+            nextButton: document.getElementById('nextButton'),
             loadMoreButton: document.getElementById('loadMoreButton'),
             posterContainer: document.getElementById('posterContainer'),
             backButton: document.getElementById('backButton'),
@@ -148,18 +150,84 @@ const App = (function() {
                 currentPage++;
                 loadFilmsToGallery(currentPage);
                 
-                // Hide button if no more pages
-                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages) {
-                    if (!FilmData.hasMorePages(currentPage)) {
-                        elements.loadMoreButton.style.display = 'none';
-                    }
-                } else {
-                    log("WARNING: FilmData.hasMorePages not available");
+                // Scroll to show the new items
+                if (elements.gallery) {
+                    setTimeout(() => {
+                        // Scroll to the right to show new items
+                        elements.gallery.scrollLeft = elements.gallery.scrollWidth;
+                    }, 100);
                 }
             });
             
             log("Load more button handler set up");
         }
+        
+        // Set up gallery navigation
+        setupGalleryNavigation();
+    };
+    
+    /**
+     * Set up horizontal gallery navigation
+     */
+    const setupGalleryNavigation = () => {
+        // Get navigation buttons
+        if (!elements.prevButton || !elements.nextButton || !elements.gallery) {
+            log("Navigation elements not found");
+            return;
+        }
+        
+        // Set scroll amount - width of 1 item + gap
+        const scrollAmount = 220; // 200px item width + 20px gap
+        
+        // Previous button click
+        elements.prevButton.addEventListener('click', () => {
+            log("Previous button clicked");
+            elements.gallery.scrollBy({
+                left: -scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Next button click
+        elements.nextButton.addEventListener('click', () => {
+            log("Next button clicked");
+            elements.gallery.scrollBy({
+                left: scrollAmount,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Show/hide buttons based on scroll position
+        elements.gallery.addEventListener('scroll', () => {
+            // Check if we can scroll left
+            if (elements.gallery.scrollLeft <= 0) {
+                elements.prevButton.style.opacity = '0.3';
+            } else {
+                elements.prevButton.style.opacity = '1';
+            }
+            
+            // Check if we can scroll right
+            if (elements.gallery.scrollLeft + elements.gallery.clientWidth >= elements.gallery.scrollWidth - 10) {
+                elements.nextButton.style.opacity = '0.3';
+                
+                // If we're at the end and there are more items to load
+                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(currentPage)) {
+                    // Show load more button
+                    if (elements.loadMoreButton) {
+                        elements.loadMoreButton.style.display = 'block';
+                    }
+                }
+            } else {
+                elements.nextButton.style.opacity = '1';
+                
+                // Hide load more button when not at the end
+                if (elements.loadMoreButton) {
+                    elements.loadMoreButton.style.display = 'none';
+                }
+            }
+        });
+        
+        log("Gallery navigation set up");
     };
     
     /**
@@ -174,8 +242,9 @@ const App = (function() {
             return;
         }
         
-        if (!elements.gallery.querySelector('.gallery-grid')) {
-            elements.gallery.innerHTML = '<div class="gallery-grid"></div>';
+        // Initialize navigation buttons
+        if (elements.prevButton) {
+            elements.prevButton.style.opacity = '0.3'; // Initially disable previous button
         }
         
         gallerySetupComplete = true;
@@ -211,11 +280,24 @@ const App = (function() {
             
             log(`Found ${films.length} films for page ${page}`);
             
-            // Get the gallery grid
-            const galleryGrid = elements.gallery.querySelector('.gallery-grid') || elements.gallery;
+            // Limit to 5 items per page for horizontal scrolling
+            const itemsPerPage = 5;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const filmsToShow = films.slice(0, endIndex);
+            
+            // Clear gallery if this is the first page
+            if (page === 1) {
+                elements.gallery.innerHTML = '';
+            }
             
             // Create gallery items
-            films.forEach(film => {
+            filmsToShow.forEach((film, index) => {
+                // Skip items already shown in previous pages
+                if (page > 1 && index < (page - 1) * itemsPerPage) {
+                    return;
+                }
+                
                 if (!film || !film._id) return;
                 
                 // Create gallery item
@@ -248,18 +330,28 @@ const App = (function() {
                     handleGalleryItemClick(film._id);
                 });
                 
-                galleryGrid.appendChild(item);
+                elements.gallery.appendChild(item);
             });
             
-            log(`Added ${films.length} items to gallery`);
+            log(`Added films to gallery (showing ${startIndex + 1} to ${endIndex} of ${films.length})`);
             
-            // Show/hide load more button
-            if (typeof FilmData !== 'undefined' && FilmData.hasMorePages) {
-                if (FilmData.hasMorePages(page)) {
-                    elements.loadMoreButton.style.display = 'block';
+            // Update navigation buttons visibility
+            if (elements.nextButton) {
+                if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(page)) {
+                    // There are more pages to load
+                    elements.nextButton.style.opacity = '1';
+                } else if (endIndex < films.length) {
+                    // There are more items in the current results to show
+                    elements.nextButton.style.opacity = '1';
                 } else {
-                    elements.loadMoreButton.style.display = 'none';
+                    // No more items to show
+                    elements.nextButton.style.opacity = '0.3';
                 }
+            }
+            
+            // Hide load more button initially
+            if (elements.loadMoreButton) {
+                elements.loadMoreButton.style.display = 'none';
             }
             
         } catch (error) {
