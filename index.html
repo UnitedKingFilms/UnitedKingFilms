@@ -22,14 +22,20 @@
     </div>
 
     <!-- Gallery View -->
-    <div id="boxy" class="section gallery-container" style="display: none;">
-        <div id="gallery" class="gallery-grid">
-            <!-- Gallery items will be populated by JavaScript -->
-        </div>
-        <div id="loadMoreContainer" class="load-more-container">
-            <button id="loadMoreButton" class="secondary-button">Load More</button>
-        </div>
+<div id="boxy" class="section gallery-container" style="display: none;">
+    <!-- Navigation buttons -->
+    <button id="prevButton" class="gallery-nav-button prev">←</button>
+    <button id="nextButton" class="gallery-nav-button next">→</button>
+    
+    <div id="gallery" class="gallery-grid">
+        <!-- Gallery items will be populated by JavaScript -->
     </div>
+    
+    <!-- We'll keep this but hide it with CSS -->
+    <div id="loadMoreContainer" class="load-more-container">
+        <button id="loadMoreButton" class="secondary-button">Load More</button>
+    </div>
+</div>
 
     <!-- Detail View -->
     <div id="posterContainer" class="section detail-container" style="display: none;">
