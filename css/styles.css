@@ -133,6 +133,8 @@ button {
 .gallery-container {
     padding: 30px 20px;
     position: relative;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Style the gallery grid for showing 5 items at once */
