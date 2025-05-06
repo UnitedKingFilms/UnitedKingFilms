@@ -98,6 +98,7 @@ button {
     background-image: url('../img/backgrounds/gallery-bg.jpg'); /* Start screen background */
     background-size: cover;
     background-position: center;
+    animation: fadeIn 2s ease 0.5s forwards;
 }
 
 .logo-container {
