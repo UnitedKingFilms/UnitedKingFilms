@@ -133,18 +133,24 @@ button {
 .gallery-container {
     padding: 30px 20px;
     position: relative;
-    align-items: center;
-    justify-content: center;
+    display: flex;           /* Add this */
+    flex-direction: column;  /* Add this */
+    align-items: center;     /* Centers horizontally */
+    justify-content: center; /* Centers vertically */
+    min-height: 100vh;       /* Add this to make it take full viewport height */
 }
 
 /* Style the gallery grid for showing 5 items at once */
 .gallery-grid {
     display: flex;
-    justify-content: space-between;
+    justify-content: center; /* Change from space-between to center */
+    flex-wrap: wrap;         /* Add this to allow wrapping */
     gap: 20px;
     margin-bottom: 30px;
     padding-bottom: 15px;
     position: relative;
+    max-width: 1200px;       /* Add this to control max width */
+    width: 100%;             /* Add this to ensure it takes available width */
 }
 
 /* Gallery navigation buttons */
