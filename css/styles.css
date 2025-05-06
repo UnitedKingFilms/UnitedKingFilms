@@ -76,8 +76,9 @@ button {
     border: none;
     color: transparent;
     font-size: 0;
-    width: 120px;
-    height: 40px;
+    align: left;
+    width: 140px;
+    height: 140px;
     padding: 0;
     margin-bottom: 20px;
 }
