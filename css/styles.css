@@ -240,6 +240,7 @@ button {
 /* Detail View */
 .detail-container {
     padding: 30px 20px;
+    animation: fadeIn 2s ease 0.5s forwards;
 }
 
 .detail-content {
