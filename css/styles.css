@@ -198,7 +198,7 @@ button {
 
 /* Gallery items */
 .gallery-item {
-    opacity: 0;
+    opacity: 0; /* Start invisible */
     flex: 0 0 calc(20% - 16px); /* 5 items per row */
     width: calc(20% - 16px);
     max-width: 220px;
@@ -209,7 +209,8 @@ button {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     margin-bottom: 10px;
-    animation: fadeIn 2s ease 0.5s forwards;
+    /* Use staggered animation delays based on item index */
+    animation: fadeIn 1.5s ease forwards;
 }
 
 .gallery-item:hover {
