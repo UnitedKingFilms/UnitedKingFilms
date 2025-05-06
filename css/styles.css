@@ -32,7 +32,7 @@ button {
 .primary-button {
     background-color: transparent; /* Transparent background */
     background-image: url('../img/buttons/start-button.png'); /* Default button image */
-    background-size: auto;
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     border: none; /* No border */
@@ -105,7 +105,7 @@ button {
 }
 
 .logo-container img {
-    max-width: 500px;
+    max-width: 1000px;
     height: auto;
 }
 
