@@ -191,6 +191,7 @@ button {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
     margin-bottom: 10px;
+    animation: fadeIn 2s ease 0.5s forwards;
 }
 
 .gallery-item:hover {
