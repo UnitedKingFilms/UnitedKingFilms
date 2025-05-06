@@ -136,9 +136,7 @@ button {
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    min-height: 100vh; /* This makes it take full viewport height */
     width: 100%;
 }
 
@@ -146,7 +144,6 @@ button {
 .gallery-grid {
     display: flex;
     justify-content: center;
-    align-items: center; /* Add this for vertical centering */
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 30px;
