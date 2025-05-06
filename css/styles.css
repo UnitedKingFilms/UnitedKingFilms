@@ -26,7 +26,7 @@ body {
 /* Button Styles */
 button {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s;
 }
 
 /* Image-based buttons */
