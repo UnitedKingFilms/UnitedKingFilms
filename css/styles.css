@@ -126,7 +126,7 @@ button {
 
 .logo-container img {
     max-width: 1000px;
-    height: auto;
+    max-height: 300px;
 }
 
 /* Gallery View */
