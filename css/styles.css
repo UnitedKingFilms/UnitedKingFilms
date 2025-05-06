@@ -88,14 +88,24 @@ button {
 }
 
 /* Start Screen */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 #startScreen {
+    opacity: 0; /* Start invisible */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 100vh;
     text-align: center;
-    background-image: url('../img/backgrounds/gallery-bg.jpg'); /* Start screen background */
+    background-image: url('../img/backgrounds/gallery-bg.jpg');
     background-size: cover;
     background-position: center;
     animation: fadeIn 2s ease 0.5s forwards;
