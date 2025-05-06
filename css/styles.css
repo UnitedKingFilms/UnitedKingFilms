@@ -96,6 +96,15 @@ button {
     opacity: 1;
   }
 }
+@keyframes fadeOut {
+    from { 
+        opacity: 1; 
+    }
+    to { 
+        opacity: 0; 
+    }
+}
+
 
 #startScreen {
     opacity: 0; /* Start invisible */
@@ -181,6 +190,7 @@ button {
 
 /* Gallery items */
 .gallery-item {
+    opacity: 0;
     flex: 0 0 calc(20% - 16px); /* 5 items per row */
     width: calc(20% - 16px);
     max-width: 220px;
@@ -305,15 +315,8 @@ button {
     animation: fadeOut 0.5s ease-in-out forwards;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
 
-@keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
-}
+
 
 /* Responsive adjustments */
 @media (max-width: 767px) {
