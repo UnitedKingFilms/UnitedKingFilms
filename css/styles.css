@@ -154,15 +154,13 @@ button {
     width: 100%;
 }
 
-/* Gallery navigation buttons */
+/* Gallery navigation buttons - CSS only arrows */
 .gallery-nav-button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.5);
     border: none;
-    color: transparent;
-    font-size: 0;
     width: 40px;
     height: 40px;
     display: flex;
@@ -171,30 +169,40 @@ button {
     cursor: pointer;
     z-index: 10;
     padding: 0;
+    border-radius: 50%;
 }
 
 .gallery-nav-button.prev {
     left: 10px;
-    background-image: url('../img/buttons/prev-button.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.gallery-nav-button.prev:hover {
-    background-image: url('../img/buttons/prev-button-hover.png');
 }
 
 .gallery-nav-button.next {
     right: 10px;
-    background-image: url('../img/buttons/next-button.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
-.gallery-nav-button.next:hover {
-    background-image: url('../img/buttons/next-button-hover.png');
+/* Create the arrow shapes using pseudo-elements */
+.gallery-nav-button::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-style: solid;
+    border-width: 3px 3px 0 0;
+    display: inline-block;
+}
+
+.gallery-nav-button.prev::before {
+    transform: rotate(-135deg);
+    margin-left: 4px;
+}
+
+.gallery-nav-button.next::before {
+    transform: rotate(45deg);
+    margin-right: 4px;
+}
+
+/* Hover states */
+.gallery-nav-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 /* Gallery items */
