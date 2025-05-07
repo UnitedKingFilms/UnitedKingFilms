@@ -159,7 +159,7 @@ button {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.4); /* Lighter background */
     border: none;
     width: 40px;
     height: 40px;
@@ -170,6 +170,7 @@ button {
     z-index: 10;
     padding: 0;
     border-radius: 50%;
+    transition: background-color 0.3s ease;
 }
 
 .gallery-nav-button.prev {
@@ -186,8 +187,10 @@ button {
     width: 10px;
     height: 10px;
     border-style: solid;
+    border-color: #333; /* Darker arrow color */
     border-width: 3px 3px 0 0;
     display: inline-block;
+    transition: border-color 0.3s ease;
 }
 
 .gallery-nav-button.prev::before {
@@ -202,8 +205,13 @@ button {
 
 /* Hover states */
 .gallery-nav-button:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(255, 255, 255, 0.7); /* Lighter hover state */
 }
+
+.gallery-nav-button:hover::before {
+    border-color: #000; /* Darker arrow on hover */
+}
+
 
 /* Gallery items */
 .gallery-item {
