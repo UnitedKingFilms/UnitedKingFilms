@@ -23,7 +23,7 @@
     "aud": ["נוער", "מבוסס על סיפור אמיתי", "שוליים", "נשים"],
     "length": "87",
     "fest": "",
-    "video": "wix:video://v1/f43491_185a1863f2844e34b32d7f12110c624f/Best%20film%20scene.mp4#posterUri=f43491_185a1863f2844e34b32d7f12110c624ff000.jpg&posterWidth=1920&posterHeight=1080"
+    "video": "./trl/girls.mp4"
   },
   {
     "_id": "film3",
@@ -36,7 +36,7 @@
     "aud": ["צעירים", "חובבי אופנועים", "ספורט אקסטרים", "כוכבי נוער"],
     "length": "120",
     "fest": "",
-    "video": "wix:video://v1/f43491_7893d2038b3a49a6b0fc0a733c91c878/FULL-SPEED-MS_FTR-25_-HE-he_4.mp4#posterUri=f43491_7893d2038b3a49a6b0fc0a733c91c878f000.jpg&posterWidth=1920&posterHeight=1080"
+    "video": "./trl/fullspeed.mp4"
   },
   {
     "_id": "film4",
@@ -49,7 +49,7 @@
     "aud": ["כוחות ביטחון"],
     "length": "92",
     "fest": "",
-    "video": "wix:video://v1/f43491_eb4b0477299b4858b17d5d014ae3f0fa/Checkout_Trailer%202048-858%2024fps%20DIGITAL_H.264.mp4#posterUri=f43491_eb4b0477299b4858b17d5d014ae3f0faf000.jpg&posterWidth=2048&posterHeight=858"
+    "video": "./trl/checkout.mp4"
   },
   {
     "_id": "film5",
@@ -62,7 +62,7 @@
     "aud": ["יפן", "נינג'ות", "שלישיית מה קשור"],
     "length": "90",
     "fest": "",
-    "video": "wix:video://v1/f43491_da1a8c2e941b4604a74f4497628fbda0/%D7%9B%D7%99%D7%91%D7%95%D7%99%20%D7%98%D7%9C%D7%A4%D7%95%D7%A0%D7%99%D7%9D%201-%20%D7%92'%D7%A4%D7%90%D7%A0%D7%99%D7%A7%D7%94.mp4#posterUri=f43491_da1a8c2e941b4604a74f4497628fbda0f000.jpg&posterWidth=1920&posterHeight=1080"
+    "video": "./trl/shuli.mp4"
   },
   {
     "_id": "film6",
@@ -75,7 +75,7 @@
     "aud": ["נוער", "יוון", "צופי ים", "סקיפרים"],
     "length": "95",
     "fest": "",
-    "video": "wix:video://v1/f43491_94f5578943f147eb95f8c3adf9f4dc26/%D7%A1%D7%95%D7%A4%D7%99%20%D7%9E%D7%95%D7%A7%D7%98%D7%9F.mp4#posterUri=f43491_94f5578943f147eb95f8c3adf9f4dc26f000.jpg&posterWidth=2000&posterHeight=1080"
+    "video": "./trl/wait.mp4"
   },
   {
     "_id": "film7",
@@ -88,7 +88,7 @@
     "aud": ["היפסטרים", "צעירים"],
     "length": "100",
     "fest": "",
-    "video": "wix:video://v1/f43491_897a4360a932409aaa3ef691f347629b/%D7%A7%D7%98%D7%A2%20%D7%9E%D7%90%D7%95%D7%A9%D7%A8%20%D7%9C%D7%A9%D7%99%D7%9E%D7%95%D7%A9-%20%D7%94%D7%A6%D7%A2%D7%AA%20%D7%97%D7%AA%D7%95%D7%A0%D7%94.mp4#posterUri=f43491_897a4360a932409aaa3ef691f347629bf000.jpg&posterWidth=2048&posterHeight=858"
+    "video": "./trl/ducks.mp4"
   },
   {
     "_id": "film8",
@@ -101,7 +101,7 @@
     "aud": ["נשים", "מבוסס על סיפור אמיתי", "איראן", "ספרים"],
     "length": "108",
     "fest": "חיפה",
-    "video": "wix:video://v1/f43491_5378527cf8814275bc1f2ba5b5645fa2/ReadingLolitainTehran_Trailer_H264_20MBPS_Texted_HEB-Subs_Stereo_250824_H.264.mp4#posterUri=f43491_5378527cf8814275bc1f2ba5b5645fa2f000.jpg&posterWidth=1920&posterHeight=1080"
+    "video": "./trl/lolita.mp4"
   },
   {
     "_id": "film9",
