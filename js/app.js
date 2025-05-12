@@ -125,9 +125,15 @@ const App = (function() {
                     }, 600);
                 }
                 
-                // Simple direct transition for reliability
-                elements.startScreen.style.display = 'none';
-                elements.boxy.style.display = 'block';
+                // Simple direct transition for reliability - explicitly hide others
+                if (elements.startScreen) elements.startScreen.style.display = 'none';
+                if (elements.boxy) elements.boxy.style.display = 'block';
+                if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+                
+                // Force gallery setup again for mobile just to be sure
+                if (isMobile && elements.gallery) {
+                    setupMobileGallery();
+                }
                 
                 log("Transitioned to gallery view");
             });
@@ -171,9 +177,15 @@ const App = (function() {
                     elements.video.style.display = 'none';
                 }
                 
-                // Simple direct transition for reliability
-                elements.posterContainer.style.display = 'none';
-                elements.boxy.style.display = 'block';
+                // Simple direct transition for reliability - explicitly hide others
+                if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+                if (elements.boxy) elements.boxy.style.display = 'block';
+                if (elements.startScreen) elements.startScreen.style.display = 'none';
+                
+                // Force gallery setup again for mobile just to be sure
+                if (isMobile && elements.gallery) {
+                    setupMobileGallery();
+                }
                 
                 log("Transitioned to gallery view");
             });
@@ -428,20 +440,24 @@ const App = (function() {
                 // Create gallery item
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
-                item.dataset.id = film._id;
                 
-                // For mobile, use a specific class to create vertical Instagram-like structure
+                // For mobile, add mobile-specific class
                 if (isMobile) {
-                    item.className = 'gallery-item mobile-gallery-item';
+                    item.classList.add('mobile-gallery-item');
                     
-                    // Mobile: Show all items for vertical scrolling
+                    // Mobile: Force styling for vertical gallery
                     item.style.display = 'block';
+                    item.style.width = '90%';
+                    item.style.maxWidth = '350px';
+                    item.style.marginBottom = '20px';
                 } else {
                     // Desktop: Only show first 5 items, hide the rest
                     if (index > 4 && page === 1) {
                         item.style.display = 'none';
                     }
                 }
+                
+                item.dataset.id = film._id;
                 
                 // Set image
                 const img = document.createElement('img');
@@ -453,6 +469,13 @@ const App = (function() {
                     : FALLBACK_IMAGE;
                     
                 setSafeImageSrc(img, film.image || defaultImage, film.title || 'Film');
+                
+                // For mobile, fix image styling
+                if (isMobile) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3'; // Maintain poster aspect ratio
+                }
                 
                 // Set title
                 const title = document.createElement('div');
@@ -473,37 +496,13 @@ const App = (function() {
             
             log(`Added ${allFilms.length} items to gallery`);
             
-            // For mobile, restructure the gallery to be fully vertical
+            // For mobile, ensure gallery is vertical
             if (isMobile) {
-                // Force gallery to be vertical layout container
-                elements.gallery.style.display = 'flex';
-                elements.gallery.style.flexDirection = 'column';
-                elements.gallery.style.alignItems = 'center';
-                elements.gallery.style.width = '100%';
-                elements.gallery.style.overflowY = 'auto';
-                elements.gallery.style.overflowX = 'hidden';
-                
-                // Show all items
-                const items = elements.gallery.querySelectorAll('.gallery-item');
-                items.forEach(item => {
-                    item.style.display = 'block';
-                    item.style.width = '90%';
-                    item.style.maxWidth = '350px';
-                    item.style.marginBottom = '20px';
-                });
-                
-                // Make sure images have proper aspect ratio
-                const images = elements.gallery.querySelectorAll('.gallery-item img');
-                images.forEach(img => {
-                    img.style.width = '100%';
-                    img.style.height = 'auto';
-                    img.style.aspectRatio = '2/3'; // Maintain poster aspect ratio
-                });
-            } else {
-                // Call the update function to ensure visibility is correct for desktop
-                if (typeof App.updateVisibleItems === 'function') {
-                    App.updateVisibleItems();
-                }
+                log("Forcing vertical gallery layout for mobile");
+                setupMobileGallery();
+            } else if (typeof App.updateVisibleItems === 'function') {
+                // For desktop, use normal visibility update
+                App.updateVisibleItems();
             }
             
         } catch (error) {
@@ -624,9 +623,11 @@ const App = (function() {
                 }
             }
             
-            // Direct view transition
-            elements.boxy.style.display = 'none';
-            elements.posterContainer.style.display = 'block';
+            // Direct view transition - explicitly hide others
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'block';
+            
             window.scrollTo(0, 0);
             
             log("Film details displayed successfully");
@@ -642,12 +643,15 @@ const App = (function() {
      * Detect if we're on a mobile device and apply mobile-specific behaviors
      */
     const setupMobileDetection = () => {
-        // Check if mobile device based on screen width
-        isMobile = window.innerWidth <= 767;
+        // Check if mobile device based on screen width - more aggressive threshold (800px)
+        isMobile = window.innerWidth <= 800;
         
         if (isMobile) {
             log("Mobile device detected, applying mobile optimizations");
             document.body.classList.add('mobile');
+            
+            // Force immediate mobile gallery setup
+            setupMobileGallery();
         } else {
             log("Desktop device detected");
             document.body.classList.remove('mobile');
@@ -656,7 +660,7 @@ const App = (function() {
         // Handle resize events for responsive behavior
         window.addEventListener('resize', () => {
             const wasMobile = isMobile;
-            isMobile = window.innerWidth <= 767;
+            isMobile = window.innerWidth <= 800; // Use same threshold
             
             // Only take action if device type has changed
             if (wasMobile !== isMobile) {
@@ -665,76 +669,209 @@ const App = (function() {
                 if (isMobile) {
                     document.body.classList.add('mobile');
                     
-                    // Hide navigation buttons
-                    if (elements.prevButton) elements.prevButton.style.display = 'none';
-                    if (elements.nextButton) elements.nextButton.style.display = 'none';
-                    
-                    // Update gallery to show all items
-                    if (typeof App.updateVisibleItems === 'function') {
-                        App.updateVisibleItems();
-                    }
+                    // Force mobile gallery setup
+                    setupMobileGallery();
                 } else {
                     document.body.classList.remove('mobile');
                     
-                    // Show navigation buttons
-                    if (elements.prevButton) elements.prevButton.style.display = 'block';
-                    if (elements.nextButton) elements.nextButton.style.display = 'block';
-                    
-                    // Update gallery to show only visible range
-                    if (typeof App.updateVisibleItems === 'function') {
-                        App.updateVisibleItems();
-                    }
+                    // Reset to desktop layout
+                    setupDesktopGallery();
                 }
             }
         });
     };
     
+    /**
+     * Set up mobile-specific gallery layout
+     */
+    const setupMobileGallery = () => {
+        log("Setting up mobile-specific gallery");
+        
+        // Hide navigation buttons
+        if (elements.prevButton) elements.prevButton.style.display = 'none';
+        if (elements.nextButton) elements.nextButton.style.display = 'none';
+        
+        // Force gallery to be vertical layout container
+        if (elements.gallery) {
+            elements.gallery.style.display = 'flex';
+            elements.gallery.style.flexDirection = 'column';
+            elements.gallery.style.alignItems = 'center';
+            elements.gallery.style.width = '100%';
+            elements.gallery.style.overflowY = 'auto';
+            elements.gallery.style.overflowX = 'hidden';
+            elements.gallery.style.maxHeight = '100%'; // Allow vertical scrolling
+            
+            // Add mobile class to gallery
+            elements.gallery.classList.add('mobile-gallery');
+            
+            // Update all existing gallery items
+            const items = elements.gallery.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                // Add mobile-specific class
+                item.classList.add('mobile-gallery-item');
+                
+                // Force display and styling
+                item.style.display = 'block';
+                item.style.width = '90%';
+                item.style.maxWidth = '350px';
+                item.style.marginBottom = '20px';
+                
+                // Make sure images have proper aspect ratio
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3'; // Maintain poster aspect ratio
+                }
+            });
+        }
+        
+        // Define mobile version of updateVisibleItems that shows all items
+        updateVisibleItems = () => {
+            log("Mobile: Showing all gallery items for vertical scrolling");
+            
+            // Get all gallery items
+            const items = elements.gallery.querySelectorAll('.gallery-item');
+            
+            // Show all items
+            items.forEach(item => {
+                item.style.display = 'block';
+                
+                // Ensure mobile styling
+                item.classList.add('mobile-gallery-item');
+                item.style.width = '90%';
+                item.style.maxWidth = '350px';
+                item.style.marginBottom = '20px';
+                
+                // Update image styles
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3';
+                }
+            });
+        };
+        
+        // Expose the update function
+        App.updateVisibleItems = updateVisibleItems;
+        
+        // Force update right now
+        if (typeof updateVisibleItems === 'function') {
+            updateVisibleItems();
+        }
+        
+        log("Mobile gallery setup complete");
+    };
+    
+    /**
+     * Reset to desktop gallery layout
+     */
+    const setupDesktopGallery = () => {
+        log("Reverting to desktop gallery");
+        
+        // Show navigation buttons
+        if (elements.prevButton) elements.prevButton.style.display = 'block';
+        if (elements.nextButton) elements.nextButton.style.display = 'block';
+        
+        // Reset gallery container styles
+        if (elements.gallery) {
+            elements.gallery.style.display = '';
+            elements.gallery.style.flexDirection = '';
+            elements.gallery.style.alignItems = '';
+            elements.gallery.style.overflowY = '';
+            elements.gallery.style.overflowX = '';
+            elements.gallery.classList.remove('mobile-gallery');
+            
+            // Reset all gallery items
+            const items = elements.gallery.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                item.classList.remove('mobile-gallery-item');
+                item.style.width = '';
+                item.style.maxWidth = '';
+                item.style.marginBottom = '';
+                
+                // Reset image styles
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.width = '';
+                    img.style.height = '';
+                    img.style.aspectRatio = '';
+                }
+            });
+        }
+        
+        // Reset to desktop navigation function
+        setupGalleryNavigation();
+        
+        log("Desktop gallery setup complete");
+    };
+    
     // Public API
     return {
         /**
-         * Initialize the application
-         */
-        init: async function() {
-            log("Initializing application");
+     * Initialize the application
+     */
+    init: async function() {
+        log("Initializing application");
+        
+        try {
+            // Cache DOM elements first
+            cacheElements();
             
-            try {
-                // Set up mobile detection first
-                setupMobileDetection();
-                
-                // Cache DOM elements
-                cacheElements();
-                
-                // Initialize film data if available
-                if (typeof FilmData !== 'undefined' && FilmData.init) {
-                    try {
-                        await FilmData.init();
-                        log("Film data initialized");
-                    } catch (error) {
-                        log("Error initializing film data:", error);
-                    }
-                } else {
-                    log("WARNING: FilmData module not found or init method missing");
+            // Set up mobile detection
+            setupMobileDetection();
+            
+            // Initialize film data if available
+            if (typeof FilmData !== 'undefined' && FilmData.init) {
+                try {
+                    await FilmData.init();
+                    log("Film data initialized");
+                } catch (error) {
+                    log("Error initializing film data:", error);
                 }
-                
-                // Set up event handlers
-                setupEventHandlers();
-                
-                // Set up gallery
-                setupGallery();
-                
-                // Load initial films if FilmData is available
-                if (typeof FilmData !== 'undefined' && FilmData.getFilmsForPage) {
-                    loadFilmsToGallery(1);
-                } else {
-                    log("WARNING: Cannot load films, FilmData module not properly initialized");
-                }
-                
-                log("Application initialized successfully");
-                
-            } catch (error) {
-                log("Error initializing application:", error);
+            } else {
+                log("WARNING: FilmData module not found or init method missing");
             }
-        },
+            
+            // Set up event handlers
+            setupEventHandlers();
+            
+            // Set up gallery
+            setupGallery();
+            
+            // Load initial films if FilmData is available
+            if (typeof FilmData !== 'undefined' && FilmData.getFilmsForPage) {
+                loadFilmsToGallery(1);
+            } else {
+                log("WARNING: Cannot load films, FilmData module not properly initialized");
+            }
+            
+            // IMPORTANT: Make sure only the start screen is visible initially
+            log("Setting initial visibility of screens");
+            if (elements.startScreen) elements.startScreen.style.display = 'flex';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+            
+            // Wait a moment then force another mobile check
+            setTimeout(() => {
+                if (isMobile && elements.gallery) {
+                    log("Forcing mobile gallery setup again after initialization");
+                    setupMobileGallery();
+                    
+                    // Again ensure only start screen is visible at beginning
+                    if (elements.startScreen) elements.startScreen.style.display = 'flex';
+                    if (elements.boxy) elements.boxy.style.display = 'none';
+                    if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+                }
+            }, 500);
+            
+            log("Application initialized successfully");
+            
+        } catch (error) {
+            log("Error initializing application:", error);
+        }
+    },
         // Make updateVisibleItems accessible to other functions
         updateVisibleItems: null
     };
