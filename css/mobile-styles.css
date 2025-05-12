@@ -56,6 +56,7 @@
         width: 100%;
     }
     
+    /* Mobile gallery optimizations - fully Instagram-style vertical scroll */
     .gallery-grid {
         display: flex;
         flex-direction: column; /* Stack items vertically */
@@ -64,6 +65,7 @@
         width: 100%;
         padding-bottom: 30px;
         overflow-y: auto; /* Enable vertical scrolling */
+        max-height: calc(100vh - 150px); /* Allow scrolling within container */
     }
     
     .gallery-item {
