@@ -1,75 +1,173 @@
 /* Mobile Styles */
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 767px) {
     /* Start Screen */
     #startScreen {
         padding: 20px;
-        height: 100vh;
-        width: 100%;
-        display: flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
     }
     
-    /* Fix for logo size */
+    .logo-container h1 {
+        font-size: 36px;
+    }
+    
+    /* Logo resizing */
     .logo-container {
         width: 100%;
         margin-bottom: 30px;
-        text-align: center;
     }
     
     .logo-container img {
-        max-width: 100% !important; /* Makes logo responsive */
-        height: auto !important;
+        max-width: 100%; /* Makes logo responsive */
+        height: auto;
     }
     
-    /* Adjusted start button size */
+    /* Button sizing */
     .primary-button {
-        width: 140px !important; /* More appropriate size */
-        height: 140px !important; /* More appropriate size */
-        background-size: contain !important;
-        margin: 0 auto !important;
-    }
-
-    /* Fix for gallery not showing */
-    #boxy {
-        display: block !important;
-        width: 100% !important;
-        overflow: visible !important;
-        min-height: 100vh !important;
+        width: 140px; /* More appropriate size */
+        height: 140px; /* More appropriate size */
+        background-size: contain;
+        margin: 0 auto;
     }
     
-    /* Force gallery items to show */
-    .gallery-item {
-        display: block !important;
-        opacity: 1 !important;
-        width: 90% !important;
-        max-width: 350px !important;
-        margin: 0 auto 20px auto !important;
+    /* Mobile button handling - change images on active states */
+    .primary-button:active {
+        background-image: url('../img/buttons/start-button-hover.png'); /* Use hover image on touch/active state */
     }
     
-    /* Force images to maintain proper ratio */
-    .gallery-item img {
-        width: 100% !important;
-        height: auto !important;
+    .secondary-button:active {
+        background-image: url('../img/buttons/load-more-button-hover.png'); /* Use hover image on touch/active state */
     }
     
-    /* Hide traditional navigation arrows in mobile view */
+    .back-button:active {
+        background-image: url('../img/buttons/back-button-hover.png'); /* Use hover image on touch/active state */
+    }
+    
+    /* Gallery View */
+    .gallery-container {
+        margin-top: 80px; /* Reduced top margin */
+        padding: 15px 10px;
+    }
+    
+    /* Vertical scroll gallery for mobile */
+    .gallery-grid {
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 30px;
+    }
+    
+    /* Mobile gallery items */
+    .gallery-item, 
+    .mobile-gallery-item {
+        display: block;
+        width: 90%;
+        max-width: 350px;
+        margin-bottom: 20px;
+    }
+    
+    .gallery-item img,
+    .mobile-gallery-item img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 2/3; /* Maintain poster aspect ratio */
+    }
+    
+    /* Hide navigation arrows in mobile view */
     .gallery-nav-button {
-        display: none !important;
+        display: none;
+    }
+    
+    /* Detail View */
+    .detail-container {
+        padding: 15px;
+    }
+    
+    .detail-content {
+        flex-direction: column;
+        gap: 20px;
     }
     
     /* Fix back button to not affect layout */
     .back-button {
-        position: fixed !important; /* Fixed position */
-        top: 15px !important;
-        left: 15px !important;
-        z-index: 100 !important;
-        width: 60px !important;
-        height: 60px !important;
-        background-color: transparent !important;
-        float: none !important; /* Remove float */
-        margin-bottom: 0 !important;
+        position: fixed; /* Fixed position */
+        top: 15px;
+        left: 15px;
+        z-index: 100;
+        width: 60px;
+        height: 60px;
+        background-color: transparent;
+        float: none; /* Remove float */
+        margin-bottom: 0;
+    }
+    
+    /* Add space for fixed back button */
+    .detail-content {
+        margin-top: 60px; 
+    }
+    
+    .poster-section {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+    
+    .movie-poster {
+        width: 80%;
+        height: auto;
+        max-height: 50vh;
+        object-fit: contain;
+    }
+    
+    .info-section {
+        width: 100%;
+        text-align: right;
+    }
+    
+    .movie-meta {
+        grid-template-columns: 1fr; /* Single column */
+    }
+    
+    .meta-item, .movie-cast, .movie-synopsis {
+        width: 100%;
+        margin-bottom: 15px;
+        padding: 0 8px;
+    }
+    
+    /* Video handling */
+    .video-container {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    #video {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+    
+    /* Load more button */
+    .load-more-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .secondary-button {
+        width: 160px;
+        height: 55px;
+    }
+    
+    /* Make gallery items visible on mobile */
+    .mobile-gallery {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        width: 100% !important;
+    }
+    
+    /* Add smooth scrolling for the gallery */
+    body, html {
+        scroll-behavior: smooth;
     }
 }
