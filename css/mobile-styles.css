@@ -1,28 +1,25 @@
-/* Mobile button handling - change images on active/touch states instead of hover */
-    .primary-button:active,
-    .primary-button.touched {
-        background-image: url('../img/buttons/start-button-hover.png'); /* Use hover image on touch/active state */
+/* Mobile button handling - change images permanently after click/touch */
+    .primary-button.clicked {
+        background-image: url('../img/buttons/start-button-hover.png'); /* Use hover image after click */
     }
     
-    .secondary-button:active,
-    .secondary-button.touched {
-        background-image: url('../img/buttons/load-more-button-hover.png'); /* Use hover image on touch/active state */
+    .secondary-button.clicked {
+        background-image: url('../img/buttons/load-more-button-hover.png'); /* Use hover image after click */
     }
     
-    .back-button:active,
-    .back-button.touched {
-        background-image: url('../img/buttons/back-button-hover.png'); /* Use hover image on touch/active state */
+    .back-button.clicked {
+        background-image: url('../img/buttons/back-button-hover.png'); /* Use hover image after click */
     }
     
-    /* Add animation effect for touch feedback */
-    .button-touch-effect {
-        animation: buttonPress 0.3s ease;
-    }
-    
+    /* Button press animation */
     @keyframes buttonPress {
         0% { transform: scale(1); }
         50% { transform: scale(0.95); }
         100% { transform: scale(1); }
+    }
+    
+    .button-press-animation {
+        animation: buttonPress 0.3s ease;
     }/* Mobile Styles */
 @media only screen and (max-width: 767px) {
     /* Start Screen */
