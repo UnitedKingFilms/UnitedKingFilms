@@ -201,21 +201,7 @@ const App = (function() {
                     // Remove animation class after animation completes
                     setTimeout(() => {
                         elements.startButton.classList.remove('button-press-animation');
-                    },
-        // Make updateVisibleItems accessible to other functions
-        updateVisibleItems: null
-    };
-})();
-
-// Initialize the application when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, initializing application");
-    
-    // Initialize the app directly for more reliable startup
-    App.init();
-    
-    console.log("Film Gallery initialization triggered");
-}); 300);
+                    }, 300);
                     
                     // Reset after navigation transition
                     setTimeout(() => {
@@ -367,6 +353,29 @@ document.addEventListener('DOMContentLoaded', function() {
             // Define mobile version of updateVisibleItems that shows all items
             updateVisibleItems = () => {
                 log("Mobile: Showing all gallery items for vertical scrolling");
+            
+            // Get all gallery items
+            const items = elements.gallery.querySelectorAll('.gallery-item');
+            
+            // Show all items
+            items.forEach(item => {
+                item.style.display = 'block';
+                
+                // Ensure mobile styling
+                item.classList.add('mobile-gallery-item');
+                item.style.width = '90%';
+                item.style.maxWidth = '350px';
+                item.style.marginBottom = '20px';
+                
+                // Update image styles
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3';
+                }
+            });
+        }; all gallery items for vertical scrolling");
                 
                 // Get all gallery items
                 const items = elements.gallery.querySelectorAll('.gallery-item');
@@ -510,6 +519,9 @@ document.addEventListener('DOMContentLoaded', function() {
             // Safety check for FilmData
             if (typeof FilmData === 'undefined' || !FilmData.getFilmsForPage) {
                 log("ERROR: FilmData module not available");
+                
+                // DEBUG: Create some dummy content for testing
+                createDummyGalleryContent();
                 return;
             }
             
@@ -518,6 +530,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!films || films.length === 0) {
                 log("No films found for this page");
+                
+                // DEBUG: Create some dummy content for testing
+                createDummyGalleryContent();
                 return;
             }
             
@@ -605,6 +620,76 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             log("Error loading films to gallery:", error);
+            
+            // DEBUG: Create some dummy content for testing
+            createDummyGalleryContent();
+        }
+    };
+    
+    /**
+     * Debug helper: Create dummy gallery content
+     * This is used if FilmData is not available
+     */
+    const createDummyGalleryContent = () => {
+        log("Creating dummy gallery content for testing");
+        
+        if (!elements.gallery) return;
+        
+        // Clear gallery
+        elements.gallery.innerHTML = '';
+        
+        // Create some dummy items
+        for (let i = 1; i <= 5; i++) {
+            const item = document.createElement('div');
+            item.className = 'gallery-item';
+            
+            // For mobile, add mobile-specific class
+            if (isMobile) {
+                item.classList.add('mobile-gallery-item');
+                item.style.display = 'block';
+                item.style.width = '90%';
+                item.style.maxWidth = '350px';
+                item.style.marginBottom = '20px';
+            }
+            
+            item.dataset.id = `dummy-${i}`;
+            
+            // Set image
+            const img = document.createElement('img');
+            img.src = FALLBACK_IMAGE;
+            img.alt = `Test Film ${i}`;
+            
+            // For mobile, fix image styling
+            if (isMobile) {
+                img.style.width = '100%';
+                img.style.height = 'auto';
+                img.style.aspectRatio = '2/3';
+            }
+            
+            // Set title
+            const title = document.createElement('div');
+            title.className = 'gallery-item-title';
+            title.textContent = `Test Film ${i}`;
+            
+            // Add to gallery
+            item.appendChild(img);
+            item.appendChild(title);
+            
+            // Add click event
+            item.addEventListener('click', () => {
+                alert(`This is a dummy film ${i} for testing`);
+            });
+            
+            elements.gallery.appendChild(item);
+        }
+        
+        log("Added 5 dummy items to gallery");
+        
+        // For mobile, ensure gallery is vertical
+        if (isMobile) {
+            setupMobileGallery();
+        } else if (typeof App.updateVisibleItems === 'function') {
+            App.updateVisibleItems();
         }
     };
     
@@ -837,81 +922,4 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Define mobile version of updateVisibleItems that shows all items
         updateVisibleItems = () => {
-            log("Mobile: Showing all gallery items for vertical scrolling");
-            
-            // Get all gallery items
-            const items = elements.gallery.querySelectorAll('.gallery-item');
-            
-            // Show all items
-            items.forEach(item => {
-                item.style.display = 'block';
-                
-                // Ensure mobile styling
-                item.classList.add('mobile-gallery-item');
-                item.style.width = '90%';
-                item.style.maxWidth = '350px';
-                item.style.marginBottom = '20px';
-                
-                // Update image styles
-                const img = item.querySelector('img');
-                if (img) {
-                    img.style.width = '100%';
-                    img.style.height = 'auto';
-                    img.style.aspectRatio = '2/3';
-                }
-            });
-        };
-        
-        // Expose the update function
-        App.updateVisibleItems = updateVisibleItems;
-        
-        // Force update right now
-        if (typeof updateVisibleItems === 'function') {
-            updateVisibleItems();
-        }
-        
-        log("Mobile gallery setup complete");
-    };
-    
-    /**
-     * Reset to desktop gallery layout
-     */
-    const setupDesktopGallery = () => {
-        log("Reverting to desktop gallery");
-        
-        // Show navigation buttons
-        if (elements.prevButton) elements.prevButton.style.display = 'block';
-        if (elements.nextButton) elements.nextButton.style.display = 'block';
-        
-        // Reset gallery container styles
-        if (elements.gallery) {
-            elements.gallery.style.display = '';
-            elements.gallery.style.flexDirection = '';
-            elements.gallery.style.alignItems = '';
-            elements.gallery.style.overflowY = '';
-            elements.gallery.style.overflowX = '';
-            elements.gallery.classList.remove('mobile-gallery');
-            
-            // Reset all gallery items
-            const items = elements.gallery.querySelectorAll('.gallery-item');
-            items.forEach(item => {
-                item.classList.remove('mobile-gallery-item');
-                item.style.width = '';
-                item.style.maxWidth = '';
-                item.style.marginBottom = '';
-                
-                // Reset image styles
-                const img = item.querySelector('img');
-                if (img) {
-                    img.style.width = '';
-                    img.style.height = '';
-                    img.style.aspectRatio = '';
-                }
-            });
-        }
-        
-        // Reset to desktop navigation function
-        setupGalleryNavigation();
-        
-        log("Desktop gallery setup complete");
-    };
+            log("Mobile: Showing
