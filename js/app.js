@@ -527,9 +527,17 @@ const App = (function() {
         isProcessing = true;
         
         try {
+            // Before even getting the film data, hide gallery immediately
+            // to prevent seeing both screens at once
+            if (elements.boxy) {
+                elements.boxy.style.display = 'none';
+            }
+            
             // Safety check for FilmData
             if (typeof FilmData === 'undefined' || !FilmData.getFilmById) {
                 log("ERROR: FilmData module not available");
+                // If we can't proceed, show gallery again
+                if (elements.boxy) elements.boxy.style.display = 'block';
                 isProcessing = false;
                 return;
             }
@@ -539,6 +547,8 @@ const App = (function() {
             
             if (!film) {
                 log(`Film with ID ${id} not found`);
+                // If we can't proceed, show gallery again
+                if (elements.boxy) elements.boxy.style.display = 'block';
                 isProcessing = false;
                 return;
             }
@@ -548,6 +558,8 @@ const App = (function() {
             
         } catch (error) {
             log("Error handling gallery item click:", error);
+            // If error occurs, show gallery again
+            if (elements.boxy) elements.boxy.style.display = 'block';
             isProcessing = false;
         }
     };
