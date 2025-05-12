@@ -106,6 +106,8 @@ const App = (function() {
                 
                 // Handle button click animation and image change for mobile
                 if (isMobile) {
+                    // Force immediate image change before any transitions
+                    elements.startButton.style.backgroundImage = "url('../img/buttons/start-button-hover.png')";
                     elements.startButton.classList.add('clicked', 'button-press-animation');
                     
                     // Remove animation class after animation completes
@@ -116,6 +118,10 @@ const App = (function() {
                     // Reset after navigation transition
                     setTimeout(() => {
                         elements.startButton.classList.remove('clicked');
+                        // Only reset background image if not hovered
+                        if (!elements.startButton.matches(':hover')) {
+                            elements.startButton.style.backgroundImage = "";
+                        }
                     }, 600);
                 }
                 
@@ -140,6 +146,8 @@ const App = (function() {
                 
                 // Handle button click animation and image change for mobile
                 if (isMobile) {
+                    // Force immediate image change before any transitions
+                    elements.backButton.style.backgroundImage = "url('../img/buttons/back-button-hover.png')";
                     elements.backButton.classList.add('clicked', 'button-press-animation');
                     
                     // Remove animation class after animation completes
@@ -150,6 +158,10 @@ const App = (function() {
                     // Reset after navigation transition
                     setTimeout(() => {
                         elements.backButton.classList.remove('clicked');
+                        // Only reset background image if not hovered
+                        if (!elements.backButton.matches(':hover')) {
+                            elements.backButton.style.backgroundImage = "";
+                        }
                     }, 600);
                 }
                 
@@ -180,6 +192,8 @@ const App = (function() {
                 
                 // Handle button click animation and image change for mobile
                 if (isMobile) {
+                    // Force immediate image change before any transitions
+                    elements.loadMoreButton.style.backgroundImage = "url('../img/buttons/load-more-button-hover.png')";
                     elements.loadMoreButton.classList.add('clicked', 'button-press-animation');
                     
                     // Remove animation class after animation completes
@@ -190,6 +204,10 @@ const App = (function() {
                     // Reset after a short delay
                     setTimeout(() => {
                         elements.loadMoreButton.classList.remove('clicked');
+                        // Only reset background image if not hovered
+                        if (!elements.loadMoreButton.matches(':hover')) {
+                            elements.loadMoreButton.style.backgroundImage = "";
+                        }
                     }, 1000);
                 }
                 
@@ -412,8 +430,10 @@ const App = (function() {
                 item.className = 'gallery-item';
                 item.dataset.id = film._id;
                 
-                // Set initial display based on device type
+                // For mobile, use a specific class to create vertical Instagram-like structure
                 if (isMobile) {
+                    item.className = 'gallery-item mobile-gallery-item';
+                    
                     // Mobile: Show all items for vertical scrolling
                     item.style.display = 'block';
                 } else {
@@ -453,9 +473,37 @@ const App = (function() {
             
             log(`Added ${allFilms.length} items to gallery`);
             
-            // Call the update function to ensure visibility is correct
-            if (typeof App.updateVisibleItems === 'function') {
-                App.updateVisibleItems();
+            // For mobile, restructure the gallery to be fully vertical
+            if (isMobile) {
+                // Force gallery to be vertical layout container
+                elements.gallery.style.display = 'flex';
+                elements.gallery.style.flexDirection = 'column';
+                elements.gallery.style.alignItems = 'center';
+                elements.gallery.style.width = '100%';
+                elements.gallery.style.overflowY = 'auto';
+                elements.gallery.style.overflowX = 'hidden';
+                
+                // Show all items
+                const items = elements.gallery.querySelectorAll('.gallery-item');
+                items.forEach(item => {
+                    item.style.display = 'block';
+                    item.style.width = '90%';
+                    item.style.maxWidth = '350px';
+                    item.style.marginBottom = '20px';
+                });
+                
+                // Make sure images have proper aspect ratio
+                const images = elements.gallery.querySelectorAll('.gallery-item img');
+                images.forEach(img => {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3'; // Maintain poster aspect ratio
+                });
+            } else {
+                // Call the update function to ensure visibility is correct for desktop
+                if (typeof App.updateVisibleItems === 'function') {
+                    App.updateVisibleItems();
+                }
             }
             
         } catch (error) {
