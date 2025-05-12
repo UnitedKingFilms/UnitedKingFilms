@@ -1,4 +1,34 @@
 /**
+ * Film Gallery Application
+ * Main application logic for the film gallery
+ */
+
+// Application module
+const App = (function() {
+    // Private variables
+    let currentPage = 1;
+    let isProcessing = false;
+    let gallerySetupComplete = false;
+    let lastClickTime = 0; // For debounce
+    let updateVisibleItems = null;
+    let isMobile = false; // Track if we're on mobile
+    
+    // Fallback image path (used when FilmData is not available or image is undefined)
+    const FALLBACK_IMAGE = "./img/default-poster.jpg";
+    
+    // DOM Elements Cache
+    let elements = {};
+    
+    // Helper Functions
+    const log = (message, data) => {
+        if (data) {
+            console.log(`LOG: ${message}`, data);
+        } else {
+            console.log(`LOG: ${message}`);
+        }
+    };
+    
+    /**
      * Reset all screens to their initial state
      * Shows only start screen, hides everything else
      */
@@ -83,34 +113,6 @@
             if (elements.posterContainer) elements.posterContainer.style.display = 'block';
             if (elements.startScreen) elements.startScreen.style.display = 'none';
             if (elements.boxy) elements.boxy.style.display = 'none';
-        }
-    };/**
- * Film Gallery Application
- * Main application logic for the film gallery
- */
-
-// Application module
-const App = (function() {
-    // Private variables
-    let currentPage = 1;
-    let isProcessing = false;
-    let gallerySetupComplete = false;
-    let lastClickTime = 0; // For debounce
-    let updateVisibleItems = null;
-    let isMobile = false; // Track if we're on mobile
-    
-    // Fallback image path (used when FilmData is not available or image is undefined)
-    const FALLBACK_IMAGE = "./img/default-poster.jpg";
-    
-    // DOM Elements Cache
-    let elements = {};
-    
-    // Helper Functions
-    const log = (message, data) => {
-        if (data) {
-            console.log(`LOG: ${message}`, data);
-        } else {
-            console.log(`LOG: ${message}`);
         }
     };
     
@@ -199,7 +201,21 @@ const App = (function() {
                     // Remove animation class after animation completes
                     setTimeout(() => {
                         elements.startButton.classList.remove('button-press-animation');
-                    }, 300);
+                    },
+        // Make updateVisibleItems accessible to other functions
+        updateVisibleItems: null
+    };
+})();
+
+// Initialize the application when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing application");
+    
+    // Initialize the app directly for more reliable startup
+    App.init();
+    
+    console.log("Film Gallery initialization triggered");
+}); 300);
                     
                     // Reset after navigation transition
                     setTimeout(() => {
@@ -899,82 +915,3 @@ const App = (function() {
         
         log("Desktop gallery setup complete");
     };
-    
-    // Public API
-    return {
-        /**
-     * Initialize the application
-     */
-    init: async function() {
-        log("Initializing application");
-        
-        try {
-            // Cache DOM elements first
-            cacheElements();
-            
-            // VERY IMPORTANT: Reset all screens to their initial state immediately
-            log("Resetting all screens to initial state");
-            resetAllScreens();
-            
-            // Set up mobile detection
-            setupMobileDetection();
-            
-            // Initialize film data if available
-            if (typeof FilmData !== 'undefined' && FilmData.init) {
-                try {
-                    await FilmData.init();
-                    log("Film data initialized");
-                } catch (error) {
-                    log("Error initializing film data:", error);
-                }
-            } else {
-                log("WARNING: FilmData module not found or init method missing");
-            }
-            
-            // Set up event handlers
-            setupEventHandlers();
-            
-            // Set up gallery
-            setupGallery();
-            
-            // Load initial films if FilmData is available
-            if (typeof FilmData !== 'undefined' && FilmData.getFilmsForPage) {
-                loadFilmsToGallery(1);
-            } else {
-                log("WARNING: Cannot load films, FilmData module not properly initialized");
-            }
-            
-            // Force a final reset of screens
-            resetAllScreens();
-            
-            // Wait a moment then force another mobile check and reset screens again
-            setTimeout(() => {
-                if (isMobile && elements.gallery) {
-                    log("Forcing mobile gallery setup again after initialization");
-                    setupMobileGallery();
-                }
-                resetAllScreens();
-            }, 500);
-            
-            log("Application initialized successfully");
-            
-        } catch (error) {
-            log("Error initializing application:", error);
-            // Still try to reset screens on error
-            resetAllScreens();
-        }
-    },
-        // Make updateVisibleItems accessible to other functions
-        updateVisibleItems: null
-    };
-})();
-
-// Initialize the application when DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    console.log("DOM loaded, initializing application");
-    
-    // Initialize the app directly for more reliable startup
-    App.init();
-    
-    console.log("Film Gallery initialization triggered");
-});
