@@ -34,6 +34,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        z-index: 100 !important;
     }
     
     /* Fix for logo size */
@@ -66,6 +67,15 @@
         align-items: center !important;
     }
     
+    /* Fix for gallery not showing */
+    #boxy {
+        display: block !important;
+        opacity: 1 !important;
+        width: 100% !important;
+        overflow: visible !important;
+        min-height: 100vh !important;
+    }
+    
     /* Force the gallery to be vertical */
     #gallery, 
     .gallery-grid,
@@ -75,9 +85,11 @@
         align-items: center !important;
         width: 100% !important;
         padding-bottom: 30px !important;
-        overflow-y: auto !important;
+        overflow-y: visible !important;
         overflow-x: hidden !important;
         max-height: none !important; /* Full page scrolling */
+        opacity: 1 !important;
+        animation: none !important;
     }
     
     /* Force items to be full width in the vertical flow */
@@ -88,6 +100,8 @@
         margin-bottom: 20px !important;
         display: block !important;
         flex: none !important; /* Override any flex settings */
+        opacity: 1 !important;
+        animation: none !important;
     }
     
     /* Force images to maintain proper ratio */
@@ -96,6 +110,7 @@
         width: 100% !important;
         height: auto !important;
         aspect-ratio: 2/3 !important; /* Maintain poster aspect ratio */
+        opacity: 1 !important;
     }
     
     /* Hide traditional navigation arrows in mobile view since we're using Instagram-style vertical scroll */
@@ -216,15 +231,20 @@
         scroll-behavior: smooth !important;
     }
     
-    /* Fix any visibility issues */
-    #boxy {
-        overflow: visible !important;
-        min-height: 100vh !important;
+    /* Fix visibility issues with the gallery animation */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
     }
     
-    /* Make sure items in the gallery are shown */
-    #boxy .gallery-item {
+    .fade-in {
+        animation: fadeIn 0.5s forwards !important;
         opacity: 1 !important;
+    }
+    
+    /* Override any animations that might delay visibility */
+    .gallery-item {
         animation: none !important;
+        opacity: 1 !important;
     }
 }
