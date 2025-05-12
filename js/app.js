@@ -1,4 +1,90 @@
 /**
+     * Reset all screens to their initial state
+     * Shows only start screen, hides everything else
+     */
+    const resetAllScreens = () => {
+        log("Resetting all screens to initial state");
+        
+        try {
+            // First hide everything
+            const allElements = document.querySelectorAll('body > div');
+            allElements.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            // Then explicitly set each screen
+            if (elements.startScreen) elements.startScreen.style.display = 'flex';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+            
+            log("Screen reset complete");
+        } catch (error) {
+            log("Error resetting screens:", error);
+            
+            // Fallback direct approach
+            if (elements.startScreen) elements.startScreen.style.display = 'flex';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+        }
+    };
+    
+    /**
+     * Show only the gallery screen
+     */
+    const showGalleryScreen = () => {
+        log("Showing gallery screen only");
+        
+        try {
+            // First hide everything
+            const allElements = document.querySelectorAll('body > div');
+            allElements.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            // Then show just the gallery
+            if (elements.boxy) elements.boxy.style.display = 'block';
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+            
+            log("Gallery display complete");
+        } catch (error) {
+            log("Error showing gallery:", error);
+            
+            // Fallback direct approach
+            if (elements.boxy) elements.boxy.style.display = 'block';
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+        }
+    };
+    
+    /**
+     * Show only the film detail screen
+     */
+    const showFilmDetailScreen = () => {
+        log("Showing film detail screen only");
+        
+        try {
+            // First hide everything
+            const allElements = document.querySelectorAll('body > div');
+            allElements.forEach(el => {
+                if (el) el.style.display = 'none';
+            });
+            
+            // Then show just the film details
+            if (elements.posterContainer) elements.posterContainer.style.display = 'block';
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            
+            log("Film detail display complete");
+        } catch (error) {
+            log("Error showing film details:", error);
+            
+            // Fallback direct approach
+            if (elements.posterContainer) elements.posterContainer.style.display = 'block';
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+        }
+    };/**
  * Film Gallery Application
  * Main application logic for the film gallery
  */
@@ -125,10 +211,8 @@ const App = (function() {
                     }, 600);
                 }
                 
-                // Simple direct transition for reliability - explicitly hide others
-                if (elements.startScreen) elements.startScreen.style.display = 'none';
-                if (elements.boxy) elements.boxy.style.display = 'block';
-                if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+                // Use our new screen management function
+                showGalleryScreen();
                 
                 // Force gallery setup again for mobile just to be sure
                 if (isMobile && elements.gallery) {
@@ -177,10 +261,8 @@ const App = (function() {
                     elements.video.style.display = 'none';
                 }
                 
-                // Simple direct transition for reliability - explicitly hide others
-                if (elements.posterContainer) elements.posterContainer.style.display = 'none';
-                if (elements.boxy) elements.boxy.style.display = 'block';
-                if (elements.startScreen) elements.startScreen.style.display = 'none';
+                // Use our new screen management function
+                showGalleryScreen();
                 
                 // Force gallery setup again for mobile just to be sure
                 if (isMobile && elements.gallery) {
@@ -527,17 +609,16 @@ const App = (function() {
         isProcessing = true;
         
         try {
-            // Before even getting the film data, hide gallery immediately
-            // to prevent seeing both screens at once
-            if (elements.boxy) {
-                elements.boxy.style.display = 'none';
-            }
+            // First hide all screens immediately to prevent flash of multiple screens
+            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+            if (elements.boxy) elements.boxy.style.display = 'none';
+            if (elements.startScreen) elements.startScreen.style.display = 'none';
             
             // Safety check for FilmData
             if (typeof FilmData === 'undefined' || !FilmData.getFilmById) {
                 log("ERROR: FilmData module not available");
                 // If we can't proceed, show gallery again
-                if (elements.boxy) elements.boxy.style.display = 'block';
+                showGalleryScreen();
                 isProcessing = false;
                 return;
             }
@@ -548,18 +629,18 @@ const App = (function() {
             if (!film) {
                 log(`Film with ID ${id} not found`);
                 // If we can't proceed, show gallery again
-                if (elements.boxy) elements.boxy.style.display = 'block';
+                showGalleryScreen();
                 isProcessing = false;
                 return;
             }
             
-            // Display film details with direct DOM manipulation
+            // Display film details
             displayFilmDetails(film);
             
         } catch (error) {
             log("Error handling gallery item click:", error);
             // If error occurs, show gallery again
-            if (elements.boxy) elements.boxy.style.display = 'block';
+            showGalleryScreen();
             isProcessing = false;
         }
     };
@@ -635,16 +716,16 @@ const App = (function() {
                 }
             }
             
-            // Direct view transition - explicitly hide others
-            if (elements.startScreen) elements.startScreen.style.display = 'none';
-            if (elements.boxy) elements.boxy.style.display = 'none';
-            if (elements.posterContainer) elements.posterContainer.style.display = 'block';
+            // Use our dedicated screen management function
+            showFilmDetailScreen();
             
             window.scrollTo(0, 0);
             
             log("Film details displayed successfully");
         } catch (error) {
             log("Error displaying film details:", error);
+            // On error, go back to gallery
+            showGalleryScreen();
         } finally {
             // Ensure isProcessing is reset
             setTimeout(() => { isProcessing = false; }, 600);
@@ -831,6 +912,10 @@ const App = (function() {
             // Cache DOM elements first
             cacheElements();
             
+            // VERY IMPORTANT: Reset all screens to their initial state immediately
+            log("Resetting all screens to initial state");
+            resetAllScreens();
+            
             // Set up mobile detection
             setupMobileDetection();
             
@@ -859,29 +944,24 @@ const App = (function() {
                 log("WARNING: Cannot load films, FilmData module not properly initialized");
             }
             
-            // IMPORTANT: Make sure only the start screen is visible initially
-            log("Setting initial visibility of screens");
-            if (elements.startScreen) elements.startScreen.style.display = 'flex';
-            if (elements.boxy) elements.boxy.style.display = 'none';
-            if (elements.posterContainer) elements.posterContainer.style.display = 'none';
+            // Force a final reset of screens
+            resetAllScreens();
             
-            // Wait a moment then force another mobile check
+            // Wait a moment then force another mobile check and reset screens again
             setTimeout(() => {
                 if (isMobile && elements.gallery) {
                     log("Forcing mobile gallery setup again after initialization");
                     setupMobileGallery();
-                    
-                    // Again ensure only start screen is visible at beginning
-                    if (elements.startScreen) elements.startScreen.style.display = 'flex';
-                    if (elements.boxy) elements.boxy.style.display = 'none';
-                    if (elements.posterContainer) elements.posterContainer.style.display = 'none';
                 }
+                resetAllScreens();
             }, 500);
             
             log("Application initialized successfully");
             
         } catch (error) {
             log("Error initializing application:", error);
+            // Still try to reset screens on error
+            resetAllScreens();
         }
     },
         // Make updateVisibleItems accessible to other functions
