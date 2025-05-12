@@ -3,41 +3,105 @@
     /* Start Screen */
     #startScreen {
         padding: 20px;
+        height: 100vh;
+        width: 100%;
+        overflow: hidden;
     }
     
-    .logo-container h1 {
-        font-size: 36px;
+    /* Fix for logo size */
+    .logo-container {
+        width: 100%;
+        margin-bottom: 30px;
     }
     
-    /* Gallery View */
+    .logo-container img {
+        max-width: 100%; /* Makes logo responsive */
+        height: auto;
+    }
+    
+    /* Increase start button size */
+    .primary-button {
+        width: 180px; /* Larger button */
+        height: 180px; /* Larger button */
+        background-size: contain;
+        margin: 0 auto;
+    }
+
+    /* Gallery View - Instagram-like scrollable */
+    .gallery-container {
+        margin-top: 80px; /* Reduced top margin */
+        padding: 15px 10px;
+        width: 100%;
+    }
+    
     .gallery-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 15px;
+        display: flex;
+        flex-direction: column; /* Stack items vertically */
+        align-items: center;
+        gap: 20px;
+        width: 100%;
+        padding-bottom: 30px;
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+    
+    .gallery-item {
+        flex: 0 0 auto; /* Don't grow or shrink */
+        width: 90%; /* Take up most of the screen width */
+        max-width: 350px;
+        margin-bottom: 20px;
     }
     
     .gallery-item img {
-        height: 200px;
+        height: auto;
+        aspect-ratio: 2/3; /* Maintain poster aspect ratio */
+        width: 100%;
+    }
+    
+    /* Navigation buttons positioning */
+    .gallery-nav-button {
+        top: 50%;
+        width: 40px;
+        height: 40px;
     }
     
     /* Detail View */
     .detail-container {
         padding: 15px;
+        width: 100%;
+        box-sizing: border-box; /* Ensure padding is included in width */
     }
     
+    /* Fix back button to not affect layout */
+    .back-button {
+        position: fixed; /* Fixed position */
+        top: 15px;
+        left: 15px;
+        z-index: 100;
+        width: 60px;
+        height: 60px;
+        background-color: transparent;
+        float: none; /* Remove float */
+        margin-bottom: 0;
+    }
+    
+    /* Fix content layout after removing back button float */
     .detail-content {
         flex-direction: column;
         gap: 20px;
+        width: 100%;
+        margin-top: 60px; /* Space for fixed back button */
     }
     
     .poster-section {
-        flex: none;
-        max-width: 100%;
+        width: 100%; /* Full width */
+        display: flex;
+        justify-content: center;
     }
     
     .movie-poster {
-        width: 100%;
+        width: 80%; /* Not quite full width to look better */
         height: auto;
-        max-height: 60vh;
+        max-height: 50vh;
         object-fit: contain;
     }
     
@@ -53,7 +117,8 @@
     }
     
     .movie-meta {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Single column */
+        padding: 12px;
     }
     
     .meta-item, .movie-cast, .movie-synopsis {
@@ -62,18 +127,33 @@
         padding: 0 8px;
     }
     
+    /* Better video handling */
+    .video-container {
+        width: 100%;
+        margin-top: 20px;
+    }
+    
     #video {
         width: 100%;
         height: auto;
-        min-height: 200px;
-        max-height: 50vh;
+        aspect-ratio: 16/9;
     }
     
-    .back-button {
-        padding: 10px 15px;
-        background-color: rgba(0,0,0,0.7);
-        color: white;
-        border-radius: 5px;
-        margin-bottom: 15px;
+    /* Load more button */
+    .load-more-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .secondary-button {
+        width: 160px; /* Larger load more button */
+        height: 55px;
+    }
+    
+    /* Add smooth scrolling for the gallery */
+    body, html {
+        scroll-behavior: smooth;
     }
 }
