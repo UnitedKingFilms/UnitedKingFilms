@@ -11,6 +11,7 @@ const App = (function() {
     let gallerySetupComplete = false;
     let lastClickTime = 0; // For debounce
     let updateVisibleItems = null;
+    let isMobile = false; // Track if we're on mobile
     
     // Fallback image path (used when FilmData is not available or image is undefined)
     const FALLBACK_IMAGE = "./img/default-poster.jpg";
@@ -103,6 +104,21 @@ const App = (function() {
             elements.startButton.addEventListener('click', () => {
                 log("Start button clicked");
                 
+                // Handle button click animation and image change for mobile
+                if (isMobile) {
+                    elements.startButton.classList.add('clicked', 'button-press-animation');
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        elements.startButton.classList.remove('button-press-animation');
+                    }, 300);
+                    
+                    // Reset after navigation transition
+                    setTimeout(() => {
+                        elements.startButton.classList.remove('clicked');
+                    }, 600);
+                }
+                
                 // Simple direct transition for reliability
                 elements.startScreen.style.display = 'none';
                 elements.boxy.style.display = 'block';
@@ -121,6 +137,21 @@ const App = (function() {
             
             elements.backButton.addEventListener('click', () => {
                 log("Back button clicked");
+                
+                // Handle button click animation and image change for mobile
+                if (isMobile) {
+                    elements.backButton.classList.add('clicked', 'button-press-animation');
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        elements.backButton.classList.remove('button-press-animation');
+                    }, 300);
+                    
+                    // Reset after navigation transition
+                    setTimeout(() => {
+                        elements.backButton.classList.remove('clicked');
+                    }, 600);
+                }
                 
                 // Pause video if playing
                 if (elements.video) {
@@ -147,15 +178,38 @@ const App = (function() {
                 
                 if (isProcessing) return;
                 
+                // Handle button click animation and image change for mobile
+                if (isMobile) {
+                    elements.loadMoreButton.classList.add('clicked', 'button-press-animation');
+                    
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        elements.loadMoreButton.classList.remove('button-press-animation');
+                    }, 300);
+                    
+                    // Reset after a short delay
+                    setTimeout(() => {
+                        elements.loadMoreButton.classList.remove('clicked');
+                    }, 1000);
+                }
+                
                 // Load next page
                 currentPage++;
                 loadFilmsToGallery(currentPage);
                 
-                // Scroll to show the new items
+                // Scroll behavior based on device type
                 if (elements.gallery) {
                     setTimeout(() => {
-                        // Scroll to the right to show new items
-                        elements.gallery.scrollLeft = elements.gallery.scrollWidth;
+                        if (isMobile) {
+                            // For mobile, scroll down to show new items
+                            window.scrollTo({ 
+                                top: document.body.scrollHeight, 
+                                behavior: 'smooth' 
+                            });
+                        } else {
+                            // For desktop, scroll right to show new items
+                            elements.gallery.scrollLeft = elements.gallery.scrollWidth;
+                        }
                     }, 100);
                 }
             });
@@ -177,6 +231,32 @@ const App = (function() {
             return;
         }
         
+        // For mobile, we don't use the horizontal navigation
+        if (isMobile) {
+            if (elements.prevButton) elements.prevButton.style.display = 'none';
+            if (elements.nextButton) elements.nextButton.style.display = 'none';
+            
+            // Define mobile version of updateVisibleItems that shows all items
+            updateVisibleItems = () => {
+                log("Mobile: Showing all gallery items for vertical scrolling");
+                
+                // Get all gallery items
+                const items = elements.gallery.querySelectorAll('.gallery-item');
+                
+                // Show all items
+                items.forEach(item => {
+                    item.style.display = 'block';
+                });
+            };
+            
+            // Expose the update function
+            App.updateVisibleItems = updateVisibleItems;
+            
+            log("Mobile gallery navigation setup complete");
+            return;
+        }
+        
+        // Desktop navigation setup
         // Track current visible range
         let visibleStartIndex = 0;
         let visibleEndIndex = 4; // 0-4 = 5 items
@@ -262,7 +342,7 @@ const App = (function() {
         // Expose the update function for the loadFilmsToGallery function to use
         App.updateVisibleItems = updateVisibleItems;
         
-        log("Gallery navigation set up");
+        log("Desktop gallery navigation set up");
     };
     
     /**
@@ -277,8 +357,8 @@ const App = (function() {
             return;
         }
         
-        // Initialize navigation buttons
-        if (elements.prevButton) {
+        // Initialize navigation buttons (for desktop only)
+        if (!isMobile && elements.prevButton) {
             elements.prevButton.style.opacity = '0.3'; // Initially disable previous button
         }
         
@@ -332,9 +412,15 @@ const App = (function() {
                 item.className = 'gallery-item';
                 item.dataset.id = film._id;
                 
-                // Set initial display - show first 5 items, hide the rest
-                if (index > 4 && page === 1) {
-                    item.style.display = 'none';
+                // Set initial display based on device type
+                if (isMobile) {
+                    // Mobile: Show all items for vertical scrolling
+                    item.style.display = 'block';
+                } else {
+                    // Desktop: Only show first 5 items, hide the rest
+                    if (index > 4 && page === 1) {
+                        item.style.display = 'none';
+                    }
                 }
                 
                 // Set image
@@ -365,7 +451,7 @@ const App = (function() {
                 elements.gallery.appendChild(item);
             });
             
-            log(`Added ${allFilms.length} items to gallery (showing 5 at a time)`);
+            log(`Added ${allFilms.length} items to gallery`);
             
             // Call the update function to ensure visibility is correct
             if (typeof App.updateVisibleItems === 'function') {
@@ -504,6 +590,57 @@ const App = (function() {
         }
     };
     
+    /**
+     * Detect if we're on a mobile device and apply mobile-specific behaviors
+     */
+    const setupMobileDetection = () => {
+        // Check if mobile device based on screen width
+        isMobile = window.innerWidth <= 767;
+        
+        if (isMobile) {
+            log("Mobile device detected, applying mobile optimizations");
+            document.body.classList.add('mobile');
+        } else {
+            log("Desktop device detected");
+            document.body.classList.remove('mobile');
+        }
+        
+        // Handle resize events for responsive behavior
+        window.addEventListener('resize', () => {
+            const wasMobile = isMobile;
+            isMobile = window.innerWidth <= 767;
+            
+            // Only take action if device type has changed
+            if (wasMobile !== isMobile) {
+                log(`Device type changed to ${isMobile ? 'mobile' : 'desktop'}`);
+                
+                if (isMobile) {
+                    document.body.classList.add('mobile');
+                    
+                    // Hide navigation buttons
+                    if (elements.prevButton) elements.prevButton.style.display = 'none';
+                    if (elements.nextButton) elements.nextButton.style.display = 'none';
+                    
+                    // Update gallery to show all items
+                    if (typeof App.updateVisibleItems === 'function') {
+                        App.updateVisibleItems();
+                    }
+                } else {
+                    document.body.classList.remove('mobile');
+                    
+                    // Show navigation buttons
+                    if (elements.prevButton) elements.prevButton.style.display = 'block';
+                    if (elements.nextButton) elements.nextButton.style.display = 'block';
+                    
+                    // Update gallery to show only visible range
+                    if (typeof App.updateVisibleItems === 'function') {
+                        App.updateVisibleItems();
+                    }
+                }
+            }
+        });
+    };
+    
     // Public API
     return {
         /**
@@ -513,6 +650,9 @@ const App = (function() {
             log("Initializing application");
             
             try {
+                // Set up mobile detection first
+                setupMobileDetection();
+                
                 // Cache DOM elements
                 cacheElements();
                 
@@ -542,12 +682,6 @@ const App = (function() {
                 }
                 
                 log("Application initialized successfully");
-                
-                // Check if mobile and apply mobile optimizations
-                if (window.innerWidth <= 767) {
-                    log("Mobile device detected, applying mobile optimizations");
-                    document.body.classList.add('mobile');
-                }
                 
             } catch (error) {
                 log("Error initializing application:", error);
