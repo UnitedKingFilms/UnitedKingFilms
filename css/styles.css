@@ -130,27 +130,31 @@ button {
     height: auto;
 }
 
-/* Gallery View */
+/* Gallery View - DESKTOP ENHANCED */
 .gallery-container {
-    margin-top: 150px;
+    margin-top: 100px; /* Reduced from 150px to show more content */
     padding: 30px 20px;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     width: 100%;
+    max-width: 1800px; /* Increased from 1200px */
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* Style the gallery grid for showing 5 items at once */
+/* Style the gallery grid for showing items */
 .gallery-grid {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 30px; /* Increased from 20px */
     margin-bottom: 30px;
     padding-bottom: 15px;
     position: relative;
-    max-width: 1500px;
+    max-width: 1800px; /* Increased from 1500px */
     width: 100%;
 }
 
@@ -161,8 +165,8 @@ button {
     transform: translateY(-50%);
     background-color: rgba(255, 255, 255, 0.4); /* Lighter background */
     border: none;
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Increased from 40px */
+    height: 50px; /* Increased from 40px */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -174,33 +178,33 @@ button {
 }
 
 .gallery-nav-button.prev {
-    left: 10px;
+    left: 20px; /* Increased from 10px */
 }
 
 .gallery-nav-button.next {
-    right: 10px;
+    right: 20px; /* Increased from 10px */
 }
 
 /* Create the arrow shapes using pseudo-elements */
 .gallery-nav-button::before {
     content: "";
-    width: 10px;
-    height: 10px;
+    width: 12px; /* Increased from 10px */
+    height: 12px; /* Increased from 10px */
     border-style: solid;
     border-color: #333; /* Darker arrow color */
-    border-width: 3px 3px 0 0;
+    border-width: 4px 4px 0 0; /* Increased from 3px */
     display: inline-block;
     transition: border-color 0.3s ease;
 }
 
 .gallery-nav-button.prev::before {
     transform: rotate(-135deg);
-    margin-left: 4px;
+    margin-left: 5px; /* Adjusted for larger button */
 }
 
 .gallery-nav-button.next::before {
     transform: rotate(45deg);
-    margin-right: 4px;
+    margin-right: 5px; /* Adjusted for larger button */
 }
 
 /* Hover states */
@@ -213,43 +217,44 @@ button {
 }
 
 
-/* Gallery items */
+/* Gallery items - DESKTOP ENHANCED */
 .gallery-item {
     opacity: 0;
-    flex: 0 0 calc(20% - 16px);
-    width: calc(20% - 16px);
-    max-width: 220px;
+    flex: 0 0 calc(20% - 24px); /* Adjusted for larger gap */
+    width: calc(20% - 24px); /* Adjusted for larger gap */
+    max-width: 300px; /* Increased from 220px */
     background-color: white;
-    border-radius: 8px;
+    border-radius: 10px; /* Increased from 8px */
     overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 15px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
-    margin-bottom: 10px;
+    margin-bottom: 15px; /* Increased from 10px */
     animation: fadeIn 1.5s ease forwards;
 }
 
 .gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transform: translateY(-8px); /* Increased from -5px */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Enhanced hover shadow */
 }
 
 .gallery-item img {
     width: 100%;
-    height: 280px;
+    height: 380px; /* Increased from 280px */
     object-fit: cover;
 }
 
 .gallery-item-title {
-    padding: 10px;
+    padding: 15px; /* Increased from 10px */
     font-weight: bold;
     text-align: center;
+    font-size: 16px; /* Added explicit font size */
 }
 
 .load-more-container {
     text-align: center;
-    margin-top: 20px;
-    margin-bottom: 40px;
+    margin-top: 30px; /* Increased from 20px */
+    margin-bottom: 50px; /* Increased from 40px */
     display: none; /* Hidden by default, shown by JS when needed */
 }
 
@@ -258,22 +263,24 @@ button {
     padding: 30px 20px;
     opacity: 0;
     animation: fadeIn 2s ease 0.5s forwards;
+    max-width: 1600px; /* Added max width */
+    margin: 0 auto; /* Center the container */
 }
 
 .detail-content {
     display: flex;
-    gap: 30px;
+    gap: 40px; /* Increased from 30px */
     margin-bottom: 30px;
 }
 
 .poster-section {
-    flex: 0 0 300px;
+    flex: 0 0 400px; /* Increased from 300px */
 }
 
 .movie-poster {
     width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-radius: 12px; /* Increased from 8px */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Enhanced shadow */
 }
 
 .info-section {
@@ -281,56 +288,59 @@ button {
 }
 
 .movie-title {
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-size: 36px; /* Increased from 32px */
+    margin-bottom: 12px; /* Increased from 10px */
     color: #f5f5f5;
 }
 
 .movie-director {
-    font-size: 18px;
-    margin-bottom: 20px;
+    font-size: 20px; /* Increased from 18px */
+    margin-bottom: 24px; /* Increased from 20px */
     color: #f5f5f5;
 }
 
 .movie-meta {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Increased from 150px */
+    gap: 15px; /* Increased from 10px */
+    margin-bottom: 25px; /* Increased from 20px */
     background-color: #f9f9f9;
-    padding: 15px;
-    border-radius: 8px;
+    padding: 20px; /* Increased from 15px */
+    border-radius: 12px; /* Increased from 8px */
 }
 
 .meta-item {
-    margin-bottom: 10px;
+    margin-bottom: 12px; /* Increased from 10px */
+    font-size: 16px; /* Added explicit font size */
 }
 
 .meta-label {
     font-weight: bold;
-    margin-left: 5px;
+    margin-left: 6px; /* Increased from 5px */
 }
 
 .movie-cast, .movie-synopsis {
-    margin-bottom: 20px;
+    margin-bottom: 25px; /* Increased from 20px */
+    font-size: 16px; /* Added explicit font size */
 }
 
 .movie-cast h3, .movie-synopsis h3, #movieSynopsis, #movieActors {
-    margin-bottom: 10px;
+    margin-bottom: 12px; /* Increased from 10px */
     color: #f5f5f5;
+    font-size: 18px; /* Added explicit font size for headings */
 }
 
 .video-container {
-    margin-top: 30px;
+    margin-top: 40px; /* Increased from 30px */
 }
 
 #video {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px; /* Increased from 800px */
     margin: 0 auto;
     display: block;
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 12px; /* Increased from 8px */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
 }
 
 /* Animation Classes */
@@ -345,7 +355,7 @@ button {
 
 
 
-/* Responsive adjustments */
+/* Responsive adjustments - LEAVE THESE UNCHANGED */
 @media (max-width: 767px) {
     .gallery-item {
         flex: 0 0 calc(33.333% - 14px); /* 3 items per row on smaller screens */
