@@ -1,40 +1,15 @@
 /* Mobile Styles */
 @media only screen and (max-width: 800px) {
-    /* Button press animation */
-    @keyframes buttonPress {
-        0% { transform: scale(1); }
-        50% { transform: scale(0.95); }
-        100% { transform: scale(1); }
-    }
-    
-    .button-press-animation {
-        animation: buttonPress 0.3s ease;
-    }
-    
-    /* Mobile button handling - change images permanently after click/touch */
-    .primary-button.clicked {
-        background-image: url('../img/buttons/start-button-hover.png') !important; /* Use hover image after click */
-    }
-    
-    .secondary-button.clicked {
-        background-image: url('../img/buttons/load-more-button-hover.png') !important; /* Use hover image after click */
-    }
-    
-    .back-button.clicked {
-        background-image: url('../img/buttons/back-button-hover.png') !important; /* Use hover image after click */
-    }
-
     /* Start Screen */
     #startScreen {
         padding: 20px;
         height: 100vh;
         width: 100%;
-        overflow: hidden;
         display: flex !important;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        z-index: 100 !important;
+        z-index: 100;
     }
     
     /* Fix for logo size */
@@ -57,92 +32,32 @@
         margin: 0 auto !important;
     }
 
-    /* Force gallery to be vertical on mobile - with !important rules */
-    .gallery-container {
-        margin-top: 80px !important; /* Reduced top margin */
-        padding: 15px 10px !important;
-        width: 100% !important;
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-    }
-    
     /* Fix for gallery not showing */
     #boxy {
         display: block !important;
-        opacity: 1 !important;
         width: 100% !important;
         overflow: visible !important;
         min-height: 100vh !important;
     }
     
-    /* Force the gallery to be vertical */
-    #gallery, 
-    .gallery-grid,
-    .mobile-gallery {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center !important;
-        width: 100% !important;
-        padding-bottom: 30px !important;
-        overflow-y: visible !important;
-        overflow-x: hidden !important;
-        max-height: none !important; /* Full page scrolling */
+    /* Force gallery items to show */
+    .gallery-item {
+        display: block !important;
         opacity: 1 !important;
-        animation: none !important;
-    }
-    
-    /* Force items to be full width in the vertical flow */
-    .gallery-item,
-    .mobile-gallery-item {
         width: 90% !important;
         max-width: 350px !important;
-        margin-bottom: 20px !important;
-        display: block !important;
-        flex: none !important; /* Override any flex settings */
-        opacity: 1 !important;
-        animation: none !important;
+        margin: 0 auto 20px auto !important;
     }
     
     /* Force images to maintain proper ratio */
-    .gallery-item img,
-    .mobile-gallery-item img {
+    .gallery-item img {
         width: 100% !important;
         height: auto !important;
-        aspect-ratio: 2/3 !important; /* Maintain poster aspect ratio */
-        opacity: 1 !important;
     }
     
-    /* Hide traditional navigation arrows in mobile view since we're using Instagram-style vertical scroll */
+    /* Hide traditional navigation arrows in mobile view */
     .gallery-nav-button {
-        display: none !important; /* Hide the left/right navigation arrows on mobile */
-    }
-    
-    /* Add alternative navigation method if needed */
-    .mobile-gallery-nav {
-        display: flex;
-        justify-content: center;
-        margin: 15px 0;
-        gap: 15px;
-    }
-    
-    .mobile-nav-indicator {
-        width: 8px;
-        height: 8px;
-        background-color: rgba(255, 255, 255, 0.4);
-        border-radius: 50%;
-        transition: background-color 0.3s ease;
-    }
-    
-    .mobile-nav-indicator.active {
-        background-color: rgba(255, 255, 255, 0.9);
-    }
-    
-    /* Detail View */
-    .detail-container {
-        padding: 15px;
-        width: 100%;
-        box-sizing: border-box; /* Ensure padding is included in width */
+        display: none !important;
     }
     
     /* Fix back button to not affect layout */
@@ -156,95 +71,5 @@
         background-color: transparent !important;
         float: none !important; /* Remove float */
         margin-bottom: 0 !important;
-    }
-    
-    /* Fix content layout after removing back button float */
-    .detail-content {
-        flex-direction: column !important;
-        gap: 20px !important;
-        width: 100% !important;
-        margin-top: 60px !important; /* Space for fixed back button */
-    }
-    
-    .poster-section {
-        width: 100% !important; /* Full width */
-        display: flex !important;
-        justify-content: center !important;
-    }
-    
-    .movie-poster {
-        width: 80% !important; /* Not quite full width to look better */
-        height: auto !important;
-        max-height: 50vh !important;
-        object-fit: contain !important;
-    }
-    
-    .info-section {
-        width: 100% !important;
-        text-align: right !important;
-    }
-    
-    .movie-title {
-        font-size: 24px !important;
-        margin-top: 12px !important;
-        line-height: 1.3 !important;
-    }
-    
-    .movie-meta {
-        grid-template-columns: 1fr !important; /* Single column */
-        padding: 12px !important;
-    }
-    
-    .meta-item, .movie-cast, .movie-synopsis {
-        width: 100% !important;
-        margin-bottom: 15px !important;
-        padding: 0 8px !important;
-    }
-    
-    /* Better video handling */
-    .video-container {
-        width: 100% !important;
-        margin-top: 20px !important;
-    }
-    
-    #video {
-        width: 100% !important;
-        height: auto !important;
-        aspect-ratio: 16/9 !important;
-    }
-    
-    /* Load more button */
-    .load-more-container {
-        width: 100% !important;
-        display: flex !important;
-        justify-content: center !important;
-        margin: 20px 0 !important;
-    }
-    
-    .secondary-button {
-        width: 160px !important; /* Larger load more button */
-        height: 55px !important;
-    }
-    
-    /* Add smooth scrolling for the gallery */
-    body, html {
-        scroll-behavior: smooth !important;
-    }
-    
-    /* Fix visibility issues with the gallery animation */
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    
-    .fade-in {
-        animation: fadeIn 0.5s forwards !important;
-        opacity: 1 !important;
-    }
-    
-    /* Override any animations that might delay visibility */
-    .gallery-item {
-        animation: none !important;
-        opacity: 1 !important;
     }
 }
