@@ -299,14 +299,12 @@ button {
 }
 
 .movie-meta {
-    display: grid;
-    opacity: 50%;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Increased from 150px */
-    gap: 15px; /* Increased from 10px */
-    margin-bottom: 25px; /* Increased from 20px */
-    background-color: #f8ca10;
-    padding: 20px; /* Increased from 15px */
-    border-radius: 12px; /* Increased from 8px */
+    background: rgba(248, 202, 16, 0.28);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(248, 202, 16, 0.54);
 }
 
 .meta-item {
