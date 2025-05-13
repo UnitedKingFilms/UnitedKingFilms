@@ -89,6 +89,7 @@ const App = (function() {
             maud: document.getElementById('maud'),
             mgenre: document.getElementById('mgenre'),
             mlength: document.getElementById('mlength'),
+            movieTag: document.getElementById('movieTag'), // New element for tag information
             video: document.getElementById('video')
         };
         
@@ -282,26 +283,9 @@ const App = (function() {
         let visibleEndIndex = 4; // 0-4 = 5 items
         let maxIndex = 0; // Will be set when films are loaded
         
-        // Previous button click
+        // Previous button click (SWAPPED FUNCTIONALITY - NOW ACTS LIKE NEXT)
         elements.prevButton.addEventListener('click', () => {
-            log("Previous button clicked");
-            
-            if (visibleStartIndex <= 0) {
-                log("Already at the beginning");
-                return;
-            }
-            
-            // Move the visible range one position left
-            visibleStartIndex--;
-            visibleEndIndex--;
-            
-            // Update the gallery
-            updateVisibleItems();
-        });
-        
-        // Next button click
-        elements.nextButton.addEventListener('click', () => {
-            log("Next button clicked");
+            log("Previous button clicked (acting as Next)");
             
             if (visibleEndIndex >= maxIndex) {
                 log("Already at the end");
@@ -315,9 +299,26 @@ const App = (function() {
                 return;
             }
             
-            // Move the visible range one position right
+            // Move the visible range one position right (SWAPPED DIRECTION)
             visibleStartIndex++;
             visibleEndIndex++;
+            
+            // Update the gallery
+            updateVisibleItems();
+        });
+        
+        // Next button click (SWAPPED FUNCTIONALITY - NOW ACTS LIKE PREVIOUS)
+        elements.nextButton.addEventListener('click', () => {
+            log("Next button clicked (acting as Previous)");
+            
+            if (visibleStartIndex <= 0) {
+                log("Already at the beginning");
+                return;
+            }
+            
+            // Move the visible range one position left (SWAPPED DIRECTION)
+            visibleStartIndex--;
+            visibleEndIndex--;
             
             // Update the gallery
             updateVisibleItems();
@@ -347,14 +348,14 @@ const App = (function() {
                 }
             });
             
-            // Update navigation buttons
-            elements.prevButton.style.opacity = visibleStartIndex <= 0 ? '0.3' : '1';
-            elements.nextButton.style.opacity = visibleEndIndex >= maxIndex ? '0.3' : '1';
+            // Update navigation buttons (SWAPPED FUNCTIONALITY)
+            elements.nextButton.style.opacity = visibleStartIndex <= 0 ? '0.3' : '1';
+            elements.prevButton.style.opacity = visibleEndIndex >= maxIndex ? '0.3' : '1';
             
-            // If we're at the end and there's more to load, show the next button
+            // If we're at the end and there's more to load, show the next button (SWAPPED TO PREV BUTTON)
             if (visibleEndIndex >= maxIndex) {
                 if (typeof FilmData !== 'undefined' && FilmData.hasMorePages && FilmData.hasMorePages(currentPage)) {
-                    elements.nextButton.style.opacity = '1';
+                    elements.prevButton.style.opacity = '1';
                 }
             }
         };
@@ -362,7 +363,7 @@ const App = (function() {
         // Expose the update function for the loadFilmsToGallery function to use
         App.updateVisibleItems = updateVisibleItems;
         
-        log("Desktop gallery navigation set up");
+        log("Desktop gallery navigation set up with swapped button functionality");
     };
     
     /**
@@ -378,8 +379,8 @@ const App = (function() {
         }
         
         // Initialize navigation buttons (for desktop only)
-        if (!isMobile && elements.prevButton) {
-            elements.prevButton.style.opacity = '0.3'; // Initially disable previous button
+        if (!isMobile && elements.nextButton) {
+            elements.nextButton.style.opacity = '0.3'; // Initially disable previous button (SWAPPED)
         }
         
         gallerySetupComplete = true;
@@ -571,30 +572,21 @@ const App = (function() {
             
             // Update text elements - with null checks
             if (elements.movieTitle) elements.movieTitle.textContent = film.title || '';
+            
+            // For tag field (replacing director position in layout)
+            if (elements.movieTag && film.tag) {
+                elements.movieTag.textContent = film.tag || '';
+            } else if (elements.movieTag) {
+                elements.movieTag.textContent = '';
+            }
+            
+            // Director moved below info-section
             if (elements.movieDirector) elements.movieDirector.textContent = film.director || '';
+            
             if (elements.movieActors) elements.movieActors.textContent = film.actors || '';
             if (elements.movieSynopsis) elements.movieSynopsis.textContent = film.synopsis || '';
             
-            // Handle festival field
-            if (film.fest && elements.mfest && elements.fests) {
-                elements.mfest.textContent = film.fest;
-                elements.fests.style.display = 'block';
-            } else if (elements.fests) {
-                elements.fests.style.display = 'none';
-            }
-            
-            // Handle tags fields
-            if (elements.maud) {
-                const audText = Array.isArray(film.aud) ? film.aud.join(', ') : film.aud || '';
-                elements.maud.textContent = audText;
-            }
-            
-            if (elements.mgenre) {
-                const genreText = Array.isArray(film.genre) ? film.genre.join(', ') : film.genre || '';
-                elements.mgenre.textContent = genreText;
-            }
-            
-            // Handle length field
+            // Handle length field - now first in info-section
             if (elements.mlength) {
                 if (film.length) {
                     elements.mlength.textContent = film.length + ' דקות';
@@ -603,6 +595,26 @@ const App = (function() {
                     elements.mlength.textContent = '';
                     elements.mlength.style.display = 'none';
                 }
+            }
+            
+            // Handle genre field - now second in info-section
+            if (elements.mgenre) {
+                const genreText = Array.isArray(film.genre) ? film.genre.join(', ') : film.genre || '';
+                elements.mgenre.textContent = genreText;
+            }
+            
+            // Handle audience field - now third in info-section
+            if (elements.maud) {
+                const audText = Array.isArray(film.aud) ? film.aud.join(', ') : film.aud || '';
+                elements.maud.textContent = audText;
+            }
+            
+            // Handle festival field - now last in info-section
+            if (film.fest && elements.mfest && elements.fests) {
+                elements.mfest.textContent = film.fest;
+                elements.fests.style.display = 'block';
+            } else if (elements.fests) {
+                elements.fests.style.display = 'none';
             }
             
             // Handle video - with safety checks
