@@ -300,7 +300,7 @@ button {
 
 .movie-meta {
     display: grid;
-    background-opacity: 50%;
+    opacity: 50%;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Increased from 150px */
     gap: 15px; /* Increased from 10px */
     margin-bottom: 25px; /* Increased from 20px */
