@@ -306,12 +306,8 @@ button {
 
 .movie-meta {
     display: grid;
-    grid-template-rows: 1fr;           /* Force single row */
-    grid-auto-flow: column;            /* Items flow as columns */
-    grid-auto-columns: min-content;    /* Columns size to content */
-    grid-template-columns: none;       /* Remove fixed column template */
-    justify-content: start;            /* Align columns to start */
-    overflow-x: auto;                  /* Allow horizontal scrolling if needed */
+    grid-auto-flow: column;
+    grid-template-rows: 1fr;  /* Single row */
     margin-top: 12px;
     gap: 10px;
     padding: 15px;
@@ -323,13 +319,32 @@ button {
     -webkit-backdrop-filter: blur(12px);
     margin-bottom: 24px;
     color: #f5f5f5;
-    white-space: nowrap;              /* Optional: prevents text from wrapping */
+    width: 100%;  /* Constrain to parent width */
+    max-width: 100%;  /* Never expand beyond parent */
 }
 
-/* For columns that should expand based on content */
-.movie-meta > .expand-content {
+/* Style for fewer columns (2-3) */
+.movie-meta:has(> :nth-child(3):not(:nth-child(4))) {
+    grid-template-columns: repeat(auto-fit, 1fr);  /* Equal distribution */
+}
+
+/* Style for many columns (4+) */
+.movie-meta:has(> :nth-child(4)) {
+    /* Default minimum width for all columns */
+    grid-template-columns: repeat(auto-fit, minmax(min-content, auto));
+}
+
+/* All columns get at least their minimum content width */
+.movie-meta > * {
+    min-width: min-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Content-heavy columns can grow more (apply this class to content-heavy items) */
+.movie-meta > .more-content {
     width: max-content;
-    white-space: normal;              /* Allow text wrapping within expanded columns */
+    max-width: 100%;  /* Don't overflow container */
 }
 
 .meta-item {
