@@ -343,6 +343,13 @@ button {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
 }
 
+.highlightedinfo {
+  color: #000;            /* טקסט שחור */
+  background-color: #ff0; /* רקע צהוב */
+  padding: 5px;           /* מרווח פנימי קטן */
+  border-radius: 3px;     /* פינות מעוגלות קלות */
+}
+
 /* Animation Classes */
 .fade-in {
     animation: fadeIn 0.5s ease-in-out forwards;
