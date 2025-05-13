@@ -154,7 +154,6 @@ button {
     margin-bottom: 30px;
     padding-bottom: 15px;
     position: relative;
-    max-width: 1800px; /* Increased from 1500px */
     width: 100%;
 }
 
