@@ -416,9 +416,11 @@ const App = (function() {
             log(`Found ${films.length} films for page ${page}`);
             
             // Don't limit to 5, load all films but only show 5
-            const allFilms = films;
-            const allFilms = films.filter(film => film && film.show === "show");
-            
+
+            const allFilms = films.filter(film => film && (film.show === "show" || (film.elements && film.elements.show === "show")));
+
+            // DEBUG: Log how many films passed the filter
+            log(`Filtered to ${allFilms.length} films with show="show"`);            
             // Clear gallery if this is the first page
             if (page === 1) {
                 elements.gallery.innerHTML = '';
