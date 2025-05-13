@@ -576,7 +576,7 @@ const App = (function() {
             if (elements.movieTag) elements.movieTag.textContent = film.tag || '';
             
             if (elements.movieActors) elements.movieActors.textContent = film.actors || '';
-            if (elements.movieSynopsis) elements.movieSynopsis.textContent = film.synopsis || '';
+            if (elements.movieSynopsis) elements.movieSynopsis.innerHTML = film.synopsis || '';
             
             // Handle length field - now first in info-section
             if (elements.mlength) {
