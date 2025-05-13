@@ -84,6 +84,7 @@ const App = (function() {
             movieSynopsis: document.getElementById('movieSynopsis'),
             fests: document.getElementById('fests'),
             rel: document.getElementById('rel'),
+            show: document.getElementById('show'),
             mfest: document.getElementById('mfest'),
             maud: document.getElementById('maud'),
             mgenre: document.getElementById('mgenre'),
