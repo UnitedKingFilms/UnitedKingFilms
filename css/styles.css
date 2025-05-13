@@ -297,6 +297,7 @@ button {
     margin-bottom: 24px; /* Increased from 20px */
     color: #f5f5f5;
 }
+
 .movie-tag {
     font-size: 20px; /* Increased from 18px */
     margin-bottom: 24px; /* Increased from 20px */
@@ -304,6 +305,7 @@ button {
 }
 
 .movie-meta {
+    display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     margin-top: 12px;
     gap: 10px;
@@ -313,6 +315,7 @@ button {
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+     margin-bottom: 24px;
 }
 
 .meta-item {
