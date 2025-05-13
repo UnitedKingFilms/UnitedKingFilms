@@ -283,6 +283,23 @@ const App = (function() {
         let visibleEndIndex = 4; // 0-4 = 5 items
         let maxIndex = 0; // Will be set when films are loaded
         
+        // Next button click (SWAPPED FUNCTIONALITY - NOW ACTS LIKE PREVIOUS)
+        elements.nextButton.addEventListener('click', () => {
+            log("Next button clicked (acting as Previous)");
+            
+            if (visibleStartIndex <= 0) {
+                log("Already at the beginning");
+                return;
+            }
+            
+            // Move the visible range one position left (SWAPPED DIRECTION)
+            visibleStartIndex--;
+            visibleEndIndex--;
+            
+            // Update the gallery
+            updateVisibleItems();
+        });
+        
         // Previous button click (SWAPPED FUNCTIONALITY - NOW ACTS LIKE NEXT)
         elements.prevButton.addEventListener('click', () => {
             log("Previous button clicked (acting as Next)");
@@ -302,23 +319,6 @@ const App = (function() {
             // Move the visible range one position right (SWAPPED DIRECTION)
             visibleStartIndex++;
             visibleEndIndex++;
-            
-            // Update the gallery
-            updateVisibleItems();
-        });
-        
-        // Next button click (SWAPPED FUNCTIONALITY - NOW ACTS LIKE PREVIOUS)
-        elements.nextButton.addEventListener('click', () => {
-            log("Next button clicked (acting as Previous)");
-            
-            if (visibleStartIndex <= 0) {
-                log("Already at the beginning");
-                return;
-            }
-            
-            // Move the visible range one position left (SWAPPED DIRECTION)
-            visibleStartIndex--;
-            visibleEndIndex--;
             
             // Update the gallery
             updateVisibleItems();
@@ -349,8 +349,8 @@ const App = (function() {
             });
             
             // Update navigation buttons (SWAPPED FUNCTIONALITY)
-            elements.nextButton.style.opacity = visibleStartIndex <= 0 ? '0.3' : '1';
             elements.prevButton.style.opacity = visibleEndIndex >= maxIndex ? '0.3' : '1';
+            elements.nextButton.style.opacity = visibleStartIndex <= 0 ? '0.3' : '1';
             
             // If we're at the end and there's more to load, show the next button (SWAPPED TO PREV BUTTON)
             if (visibleEndIndex >= maxIndex) {
@@ -379,8 +379,8 @@ const App = (function() {
         }
         
         // Initialize navigation buttons (for desktop only)
-        if (!isMobile && elements.nextButton) {
-            elements.nextButton.style.opacity = '0.3'; // Initially disable previous button (SWAPPED)
+        if (!isMobile && elements.prevButton) {
+            elements.nextButton.style.opacity = '0.3'; // Initially disable next button (SWAPPED)
         }
         
         gallerySetupComplete = true;
@@ -574,14 +574,7 @@ const App = (function() {
             if (elements.movieTitle) elements.movieTitle.textContent = film.title || '';
             
             // For tag field (replacing director position in layout)
-            if (elements.movieTag && film.tag) {
-                elements.movieTag.textContent = film.tag || '';
-            } else if (elements.movieTag) {
-                elements.movieTag.textContent = '';
-            }
-            
-            // Director moved below info-section
-            if (elements.movieDirector) elements.movieDirector.textContent = film.director || '';
+            if (elements.movieTag) elements.movieTag.textContent = film.tag || '';
             
             if (elements.movieActors) elements.movieActors.textContent = film.actors || '';
             if (elements.movieSynopsis) elements.movieSynopsis.textContent = film.synopsis || '';
@@ -616,6 +609,9 @@ const App = (function() {
             } else if (elements.fests) {
                 elements.fests.style.display = 'none';
             }
+            
+            // Director moved below info-section
+            if (elements.movieDirector) elements.movieDirector.textContent = film.director || '';
             
             // Handle video - with safety checks
             if (elements.video) {
