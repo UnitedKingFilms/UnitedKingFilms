@@ -233,7 +233,7 @@ button {
 }
 
 .gallery-item:hover {
-    transform: translateY(-8px); /* Increased from -5px */
+    transform: translateY(-16px); /* Increased from -5px */
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25); /* Enhanced hover shadow */
 }
 
