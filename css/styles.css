@@ -305,11 +305,11 @@ button {
 
 .movie-meta {
     margin-top: 12px;
-    background: rgba(248, 202, 16, 0.28);
+    background: #E5E5AD;
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(248, 202, 16, 0.54);
 }
 
