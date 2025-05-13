@@ -83,6 +83,7 @@ const App = (function() {
             movieActors: document.getElementById('movieActors'),
             movieSynopsis: document.getElementById('movieSynopsis'),
             fests: document.getElementById('fests'),
+            rel: document.getElementById('rel'),
             mfest: document.getElementById('mfest'),
             maud: document.getElementById('maud'),
             mgenre: document.getElementById('mgenre'),
@@ -468,7 +469,7 @@ const App = (function() {
                 // Set title
                 const title = document.createElement('div');
                 title.className = 'gallery-item-title';
-                title.textContent = film.title || 'Untitled Film';
+                title.textContent = film.rel || 'TBA';
                 
                 // Add to gallery
                 item.appendChild(img);
