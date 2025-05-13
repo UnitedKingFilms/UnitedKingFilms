@@ -417,6 +417,7 @@ const App = (function() {
             
             // Don't limit to 5, load all films but only show 5
             const allFilms = films;
+            const allFilms = films.filter(film => film && film.show === "show");
             
             // Clear gallery if this is the first page
             if (page === 1) {
