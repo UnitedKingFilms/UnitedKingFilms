@@ -79,8 +79,8 @@ const App = (function() {
             backButton: document.getElementById('backButton'),
             moviePoster: document.getElementById('moviePoster'),
             movieTitle: document.getElementById('movieTitle'),
-            movieDirector: document.getElementById('movieDirector'),
             movieTag: document.getElementById('movieTag'), // New element for tag information
+            movieDirector: document.getElementById('movieDirector'),
             movieActors: document.getElementById('movieActors'),
             movieSynopsis: document.getElementById('movieSynopsis'),
             fests: document.getElementById('fests'),
@@ -417,7 +417,6 @@ const App = (function() {
             log(`Found ${films.length} films for page ${page}`);
             
             // Don't limit to 5, load all films but only show 5
-
             const allFilms = films.filter(film => film && (film.show === "show" || (film.elements && film.elements.show === "show")));
 
             // DEBUG: Log how many films passed the filter
@@ -664,3 +663,135 @@ const App = (function() {
                 
                 if (isMobile) {
                     document.body.classList.add('mobile');
+                    
+                    // Hide navigation buttons
+                    if (elements.prevButton) elements.prevButton.style.display = 'none';
+                    if (elements.nextButton) elements.nextButton.style.display = 'none';
+                    
+                    // Update gallery to show all items
+                    if (typeof App.updateVisibleItems === 'function') {
+                        App.updateVisibleItems();
+                    }
+                } else {
+                    document.body.classList.remove('mobile');
+                    
+                    // Show navigation buttons
+                    if (elements.prevButton) elements.prevButton.style.display = 'block';
+                    if (elements.nextButton) elements.nextButton.style.display = 'block';
+                    
+                    // Update gallery to show only visible range
+                    if (typeof App.updateVisibleItems === 'function') {
+                        App.updateVisibleItems();
+                    }
+                }
+            }
+        });
+    };
+    
+    /**
+     * Set up mobile-specific gallery layout
+     */
+    const setupMobileGallery = () => {
+        log("Setting up mobile-specific gallery");
+        
+        // Hide navigation buttons
+        if (elements.prevButton) elements.prevButton.style.display = 'none';
+        if (elements.nextButton) elements.nextButton.style.display = 'none';
+        
+        // Force gallery to be vertical layout container
+        if (elements.gallery) {
+            elements.gallery.style.display = 'flex';
+            elements.gallery.style.flexDirection = 'column';
+            elements.gallery.style.alignItems = 'center';
+            elements.gallery.style.width = '100%';
+            elements.gallery.style.overflowY = 'auto';
+            elements.gallery.style.overflowX = 'hidden';
+            
+            // Add mobile class to gallery
+            elements.gallery.classList.add('mobile-gallery');
+            
+            // Update all existing gallery items
+            const items = elements.gallery.querySelectorAll('.gallery-item');
+            items.forEach(item => {
+                // Add mobile-specific class
+                item.classList.add('mobile-gallery-item');
+                
+                // Force display and styling
+                item.style.display = 'block';
+                item.style.width = '90%';
+                item.style.maxWidth = '350px';
+                item.style.marginBottom = '20px';
+                
+                // Make sure images have proper aspect ratio
+                const img = item.querySelector('img');
+                if (img) {
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+                    img.style.aspectRatio = '2/3'; // Maintain poster aspect ratio
+                }
+            });
+        }
+        
+        log("Mobile gallery setup complete");
+    };
+    
+    // Public API
+    return {
+        /**
+         * Initialize the application
+         */
+        init: async function() {
+            log("Initializing application");
+            
+            try {
+                // Cache DOM elements first
+                cacheElements();
+                
+                // Set up mobile detection
+                setupMobileDetection();
+                
+                // Initialize film data if available
+                if (typeof FilmData !== 'undefined' && FilmData.init) {
+                    try {
+                        await FilmData.init();
+                        log("Film data initialized");
+                    } catch (error) {
+                        log("Error initializing film data:", error);
+                    }
+                } else {
+                    log("WARNING: FilmData module not found or init method missing");
+                }
+                
+                // Set up event handlers
+                setupEventHandlers();
+                
+                // Set up gallery
+                setupGallery();
+                
+                // Load initial films if FilmData is available
+                if (typeof FilmData !== 'undefined' && FilmData.getFilmsForPage) {
+                    loadFilmsToGallery(1);
+                } else {
+                    log("WARNING: Cannot load films, FilmData module not properly initialized");
+                }
+                
+                log("Application initialized successfully");
+                
+            } catch (error) {
+                log("Error initializing application:", error);
+            }
+        },
+        // Make updateVisibleItems accessible to other functions
+        updateVisibleItems: null
+    };
+})();
+
+// Initialize the application when DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("DOM loaded, initializing application");
+    
+    // Initialize the app directly for more reliable startup
+    App.init();
+    
+    console.log("Film Gallery initialization triggered");
+});
