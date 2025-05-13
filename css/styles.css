@@ -306,20 +306,31 @@ button {
 
 .movie-meta {
     display: grid;
-    grid-template-columns: repeat(var(--column-count, 3), minmax(var(--min-width, 200px), 1fr));
-    grid-auto-rows: auto;
-    grid-auto-flow: dense;
+    grid-template-rows: 1fr;           /* Force single row */
+    grid-auto-flow: column;            /* Items flow as columns */
+    grid-auto-columns: min-content;    /* Columns size to content */
+    grid-template-columns: none;       /* Remove fixed column template */
+    justify-content: start;            /* Align columns to start */
+    overflow-x: auto;                  /* Allow horizontal scrolling if needed */
     margin-top: 12px;
     gap: 10px;
     padding: 15px;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     margin-bottom: 24px;
     color: #f5f5f5;
+    white-space: nowrap;              /* Optional: prevents text from wrapping */
 }
 
+/* For columns that should expand based on content */
+.movie-meta > .expand-content {
+    width: max-content;
+    white-space: normal;              /* Allow text wrapping within expanded columns */
+}
 
 .meta-item {
     margin-bottom: 12px; /* Increased from 10px */
